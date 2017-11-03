@@ -1,0 +1,3 @@
+[submodule "darpa_cbs"]
+	path = darpa_cbs
+	url = https://github.com/trailofbits/cb-multios.git
