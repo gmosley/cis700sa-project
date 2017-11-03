@@ -1,3 +1,6 @@
 [submodule "darpa_cbs"]
 	path = darpa_cbs
 	url = https://github.com/trailofbits/cb-multios.git
+[submodule "simple_programs"]
+	path = simple_programs
+	url = https://github.com/deadbits/InsecureProgramming
