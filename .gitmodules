@@ -4,3 +4,6 @@
 [submodule "simple_programs"]
 	path = simple_programs
 	url = https://github.com/deadbits/InsecureProgramming
+[submodule "itc_benchmarks"]
+	path = itc_benchmarks
+	url = https://github.com/regehr/itc-benchmarks
