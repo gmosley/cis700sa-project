@@ -1,0 +1,73 @@
+Flawfinder version 2.0.4, (C) 2001-2017 David A. Wheeler.
+Number of rules (primarily dangerous function names) in C/C++ ruleset: 219
+Examining darpa_cbs/challenges/Multipass/lib/calloc.c
+Examining darpa_cbs/challenges/Multipass/lib/cgc_ctype.h
+Examining darpa_cbs/challenges/Multipass/lib/cgc_malloc_internal.h
+Examining darpa_cbs/challenges/Multipass/lib/cgc_stdarg.h
+Examining darpa_cbs/challenges/Multipass/lib/cgc_stddef.h
+Examining darpa_cbs/challenges/Multipass/lib/cgc_stdint.h
+Examining darpa_cbs/challenges/Multipass/lib/cgc_stdlib.h
+Examining darpa_cbs/challenges/Multipass/lib/cgc_string.h
+Examining darpa_cbs/challenges/Multipass/lib/ctype.c
+Examining darpa_cbs/challenges/Multipass/lib/free.c
+Examining darpa_cbs/challenges/Multipass/lib/malloc.c
+Examining darpa_cbs/challenges/Multipass/lib/malloc_init.c
+Examining darpa_cbs/challenges/Multipass/lib/malloc_size.c
+Examining darpa_cbs/challenges/Multipass/lib/memchr.c
+Examining darpa_cbs/challenges/Multipass/lib/memcpy.c
+Examining darpa_cbs/challenges/Multipass/lib/memset.c
+Examining darpa_cbs/challenges/Multipass/lib/printf.c
+Examining darpa_cbs/challenges/Multipass/lib/readuntil.c
+Examining darpa_cbs/challenges/Multipass/lib/realloc.c
+Examining darpa_cbs/challenges/Multipass/lib/strchr.c
+Examining darpa_cbs/challenges/Multipass/lib/strcmp.c
+Examining darpa_cbs/challenges/Multipass/lib/strcpy.c
+Examining darpa_cbs/challenges/Multipass/lib/strlen.c
+Examining darpa_cbs/challenges/Multipass/lib/strncpy.c
+Examining darpa_cbs/challenges/Multipass/lib/strsep.c
+Examining darpa_cbs/challenges/Multipass/lib/strtol.c
+Examining darpa_cbs/challenges/Multipass/pov_1/pov.c
+Examining darpa_cbs/challenges/Multipass/src/cgc_multipass_protocol.h
+Examining darpa_cbs/challenges/Multipass/src/main.c
+
+FINAL RESULTS:
+
+darpa_cbs/challenges/Multipass/lib/ctype.c:32:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+darpa_cbs/challenges/Multipass/lib/memchr.c:32:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+darpa_cbs/challenges/Multipass/lib/memset.c:31:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+darpa_cbs/challenges/Multipass/lib/printf.c:79:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+darpa_cbs/challenges/Multipass/src/cgc_multipass_protocol.h:539:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+
+ANALYSIS SUMMARY:
+
+Hits = 5
+Lines analyzed = 3498 in approximately 0.15 seconds (22590 lines/second)
+Physical Source Lines of Code (SLOC) = 2205
+Hits@level = [0]   0 [1]   0 [2]   5 [3]   0 [4]   0 [5]   0
+Hits@level+ = [0+]   5 [1+]   5 [2+]   5 [3+]   0 [4+]   0 [5+]   0
+Hits/KSLOC@level+ = [0+] 2.26757 [1+] 2.26757 [2+] 2.26757 [3+]   0 [4+]   0 [5+]   0
+Minimum risk level = 1
+Not every hit is necessarily a security vulnerability.
+There may be other security vulnerabilities; review your code!
+See 'Secure Programming HOWTO'
+(http://www.dwheeler.com/secure-programs) for more information.
