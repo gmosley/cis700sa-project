@@ -1,0 +1,307 @@
+Checking ../itc_benchmarks/01.w_Defects/bit_shift.c ...
+[../itc_benchmarks/01.w_Defects/bit_shift.c:69]: (error) Shifting by a negative value is undefined behaviour
+[../itc_benchmarks/01.w_Defects/bit_shift.c:93]: (error) Shifting by a negative value is undefined behaviour
+[../itc_benchmarks/01.w_Defects/bit_shift.c:21]: (error) Shifting 32-bit value by 32 bits is undefined behaviour
+[../itc_benchmarks/01.w_Defects/bit_shift.c:45]: (error) Shifting 32-bit value by 32 bits is undefined behaviour
+[../itc_benchmarks/01.w_Defects/bit_shift.c:81]: (error) Shifting 32-bit value by 32 bits is undefined behaviour
+[../itc_benchmarks/01.w_Defects/bit_shift.c:106]: (error) Shifting 32-bit value by 32 bits is undefined behaviour
+[../itc_benchmarks/01.w_Defects/bit_shift.c:133]: (error) Shifting 32-bit value by 32 bits is undefined behaviour
+[../itc_benchmarks/01.w_Defects/bit_shift.c:146]: (error) Shifting 32-bit value by 32 bits is undefined behaviour
+[../itc_benchmarks/01.w_Defects/bit_shift.c:163]: (error) Shifting 32-bit value by 32 bits is undefined behaviour
+[../itc_benchmarks/01.w_Defects/bit_shift.c:175]: (error) Shifting 32-bit value by 32 bits is undefined behaviour
+[../itc_benchmarks/01.w_Defects/bit_shift.c:208]: (error) Shifting 32-bit value by 32 bits is undefined behaviour
+[../itc_benchmarks/01.w_Defects/bit_shift.c:225]: (error) Shifting 32-bit value by 32 bits is undefined behaviour
+[../itc_benchmarks/01.w_Defects/bit_shift.c:236]: (error) Shifting 32-bit value by 32 bits is undefined behaviour
+[../itc_benchmarks/01.w_Defects/bit_shift.c:21]: (error) Signed integer overflow for expression 'a<<32'.
+[../itc_benchmarks/01.w_Defects/bit_shift.c:106]: (error) Signed integer overflow for expression 'a<<shift'.
+[../itc_benchmarks/01.w_Defects/bit_shift.c:133]: (error) Signed integer overflow for expression 'a<<((5*shift)+2)'.
+[../itc_benchmarks/01.w_Defects/bit_shift.c:146]: (error) Signed integer overflow for expression 'a<<((shift*shift)+7)'.
+[../itc_benchmarks/01.w_Defects/bit_shift.c:163]: (error) Signed integer overflow for expression 'a<<bit_shift_012_func_001()'.
+[../itc_benchmarks/01.w_Defects/bit_shift.c:175]: (error) Signed integer overflow for expression 'a<<shift'.
+[../itc_benchmarks/01.w_Defects/bit_shift.c:208]: (error) Signed integer overflow for expression 'a<<shift1'.
+[../itc_benchmarks/01.w_Defects/bit_shift.c:225]: (error) Signed integer overflow for expression 'a<<shift2'.
+[../itc_benchmarks/01.w_Defects/bit_shift.c:236]: (error) Signed integer overflow for expression '1<<32'.
+1/53 files checked 1% done
+Checking ../itc_benchmarks/01.w_Defects/buffer_overrun_dynamic.c ...
+[../itc_benchmarks/01.w_Defects/buffer_overrun_dynamic.c:332]: (error) Array 'indexes[4]' accessed at index 4, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/buffer_overrun_dynamic.c:606]: (error) Array 'ptr_s[i].arr[10]' accessed at index 10, which is out of bounds.
+2/53 files checked 3% done
+Checking ../itc_benchmarks/01.w_Defects/buffer_underrun_dynamic.c ...
+[../itc_benchmarks/01.w_Defects/buffer_underrun_dynamic.c:177]: (error) Array index -3 is out of bounds.
+[../itc_benchmarks/01.w_Defects/buffer_underrun_dynamic.c:531]: (error) Array 'buf[1]' accessed at index -1, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/buffer_underrun_dynamic.c:700]: (error) Array 'newTest[10]' accessed at index -10, which is out of bounds.
+3/53 files checked 5% done
+Checking ../itc_benchmarks/01.w_Defects/cmp_funcadr.c ...
+4/53 files checked 7% done
+Checking ../itc_benchmarks/01.w_Defects/conflicting_cond.c ...
+5/53 files checked 9% done
+Checking ../itc_benchmarks/01.w_Defects/data_lost.c ...
+6/53 files checked 11% done
+Checking ../itc_benchmarks/01.w_Defects/data_overflow.c ...
+[../itc_benchmarks/01.w_Defects/data_overflow.c:48]: (error) Signed integer overflow for expression 'max+1'.
+[../itc_benchmarks/01.w_Defects/data_overflow.c:165]: (error) Signed integer overflow for expression 'max+128'.
+[../itc_benchmarks/01.w_Defects/data_overflow.c:177]: (error) Signed integer overflow for expression 'max*2'.
+[../itc_benchmarks/01.w_Defects/data_overflow.c:190]: (error) Signed integer overflow for expression 'max+d'.
+[../itc_benchmarks/01.w_Defects/data_overflow.c:216]: (error) Signed integer overflow for expression '(5*max)+3'.
+[../itc_benchmarks/01.w_Defects/data_overflow.c:228]: (error) Signed integer overflow for expression '(max*max)+88048'.
+[../itc_benchmarks/01.w_Defects/data_overflow.c:245]: (error) Signed integer overflow for expression 'max+data_overflow_018_func_001()'.
+[../itc_benchmarks/01.w_Defects/data_overflow.c:257]: (error) Signed integer overflow for expression 'max+d'.
+[../itc_benchmarks/01.w_Defects/data_overflow.c:290]: (error) Signed integer overflow for expression 'max+d1'.
+[../itc_benchmarks/01.w_Defects/data_overflow.c:307]: (error) Signed integer overflow for expression 'max+d2'.
+[../itc_benchmarks/01.w_Defects/data_overflow.c:318]: (error) Signed integer overflow for expression '2147483647+1'.
+[../itc_benchmarks/01.w_Defects/data_overflow.c:335]: (error) Undefined behaviour: float (inf) to integer conversion overflow.
+[../itc_benchmarks/01.w_Defects/data_overflow.c:351]: (error) Undefined behaviour: float (inf) to integer conversion overflow.
+7/53 files checked 13% done
+Checking ../itc_benchmarks/01.w_Defects/data_underflow.c ...
+[../itc_benchmarks/01.w_Defects/data_underflow.c:20]: (error) Signed integer overflow for expression 'min-2'.
+[../itc_benchmarks/01.w_Defects/data_underflow.c:58]: (error) Signed integer overflow for expression 'min-128'.
+[../itc_benchmarks/01.w_Defects/data_underflow.c:70]: (error) Signed integer overflow for expression 'min*2'.
+[../itc_benchmarks/01.w_Defects/data_underflow.c:81]: (error) Signed integer overflow for expression '-2147483647-2'.
+[../itc_benchmarks/01.w_Defects/data_underflow.c:140]: (error) Signed integer overflow for expression 'min-data_underflow_010_func_001()'.
+[../itc_benchmarks/01.w_Defects/data_underflow.c:152]: (error) Signed integer overflow for expression 'min-d'.
+8/53 files checked 15% done
+Checking ../itc_benchmarks/01.w_Defects/dead_code.c ...
+9/53 files checked 16% done
+Checking ../itc_benchmarks/01.w_Defects/dead_lock.c ...
+Checking ../itc_benchmarks/01.w_Defects/dead_lock.c: CHECKER_POLYSPACE...
+10/53 files checked 18% done
+Checking ../itc_benchmarks/01.w_Defects/deletion_of_data_structure_sentinel.c ...
+11/53 files checked 20% done
+Checking ../itc_benchmarks/01.w_Defects/double_free.c ...
+[../itc_benchmarks/01.w_Defects/double_free.c:22]: (error) Memory pointed to by 'ptr' is freed twice.
+[../itc_benchmarks/01.w_Defects/double_free.c:101]: (error) Memory pointed to by 'ptr' is freed twice.
+[../itc_benchmarks/01.w_Defects/double_free.c:115]: (error) Memory pointed to by 'ptr' is freed twice.
+[../itc_benchmarks/01.w_Defects/double_free.c:131]: (error) Memory pointed to by 'ptr' is freed twice.
+[../itc_benchmarks/01.w_Defects/double_free.c:22]: (error) Deallocating a deallocated pointer: ptr
+[../itc_benchmarks/01.w_Defects/double_free.c:43]: (error) Deallocating a deallocated pointer: ptr
+[../itc_benchmarks/01.w_Defects/double_free.c:64]: (error) Deallocating a deallocated pointer: ptr
+[../itc_benchmarks/01.w_Defects/double_free.c:101]: (error) Deallocating a deallocated pointer: ptr
+[../itc_benchmarks/01.w_Defects/double_free.c:115]: (error) Deallocating a deallocated pointer: ptr
+[../itc_benchmarks/01.w_Defects/double_free.c:131]: (error) Deallocating a deallocated pointer: ptr
+[../itc_benchmarks/01.w_Defects/double_free.c:168]: (error) Deallocating a deallocated pointer: ptr
+[../itc_benchmarks/01.w_Defects/double_free.c:187]: (error) Deallocating a deallocated pointer: ptr
+12/53 files checked 22% done
+Checking ../itc_benchmarks/01.w_Defects/double_lock.c ...
+Checking ../itc_benchmarks/01.w_Defects/double_lock.c: CHECKER_POLYSPACE...
+13/53 files checked 24% done
+Checking ../itc_benchmarks/01.w_Defects/double_release.c ...
+14/53 files checked 26% done
+Checking ../itc_benchmarks/01.w_Defects/endless_loop.c ...
+15/53 files checked 28% done
+Checking ../itc_benchmarks/01.w_Defects/free_nondynamic_allocated_memory.c ...
+[../itc_benchmarks/01.w_Defects/free_nondynamic_allocated_memory.c:62]: (error) Deallocation of an auto-variable results in undefined behaviour.
+[../itc_benchmarks/01.w_Defects/free_nondynamic_allocated_memory.c:86]: (error) Deallocation of an auto-variable results in undefined behaviour.
+[../itc_benchmarks/01.w_Defects/free_nondynamic_allocated_memory.c:103]: (error) Deallocation of an auto-variable results in undefined behaviour.
+16/53 files checked 30% done
+Checking ../itc_benchmarks/01.w_Defects/free_null_pointer.c ...
+17/53 files checked 32% done
+Checking ../itc_benchmarks/01.w_Defects/func_pointer.c ...
+[../itc_benchmarks/01.w_Defects/func_pointer.c:352]: (error) Null pointer dereference: p
+[../itc_benchmarks/01.w_Defects/func_pointer.c:353]: (error) Null pointer dereference: p
+18/53 files checked 33% done
+Checking ../itc_benchmarks/01.w_Defects/function_return_value_unchecked.c ...
+19/53 files checked 35% done
+Checking ../itc_benchmarks/01.w_Defects/improper_termination_of_block.c ...
+20/53 files checked 37% done
+Checking ../itc_benchmarks/01.w_Defects/insign_code.c ...
+21/53 files checked 39% done
+Checking ../itc_benchmarks/01.w_Defects/invalid_extern.c ...
+22/53 files checked 41% done
+Checking ../itc_benchmarks/01.w_Defects/invalid_extern_1.c ...
+23/53 files checked 43% done
+Checking ../itc_benchmarks/01.w_Defects/invalid_memory_access.c ...
+[../itc_benchmarks/01.w_Defects/invalid_memory_access.c:45]: (error) Dereferencing 'ptr' after it is deallocated / released
+[../itc_benchmarks/01.w_Defects/invalid_memory_access.c:86]: (error) Memory leak: dptr
+[../itc_benchmarks/01.w_Defects/invalid_memory_access.c:516]: (error) Returning/dereferencing 'str_rev' after it is deallocated / released
+[../itc_benchmarks/01.w_Defects/invalid_memory_access.c:188]: (error) Dereferencing 'buf2' after it is deallocated / released
+[../itc_benchmarks/01.w_Defects/invalid_memory_access.c:224]: (error) Dereferencing 'buf' after it is deallocated / released
+[../itc_benchmarks/01.w_Defects/invalid_memory_access.c:294]: (error) Dereferencing 'ptr1' after it is deallocated / released
+[../itc_benchmarks/01.w_Defects/invalid_memory_access.c:85]: (error) Uninitialized variable: a
+[../itc_benchmarks/01.w_Defects/invalid_memory_access.c:147]: (error) Uninitialized variable: ptr
+24/53 files checked 45% done
+Checking ../itc_benchmarks/01.w_Defects/littlemem_st.c ...
+25/53 files checked 47% done
+Checking ../itc_benchmarks/01.w_Defects/livelock.c ...
+26/53 files checked 49% done
+Checking ../itc_benchmarks/01.w_Defects/lock_never_unlock.c ...
+Checking ../itc_benchmarks/01.w_Defects/lock_never_unlock.c: CHECKER_POLYSPACE...
+Checking ../itc_benchmarks/01.w_Defects/lock_never_unlock.c: CHECKER_POLYSPACE;PRINT_DEBUG...
+27/53 files checked 50% done
+Checking ../itc_benchmarks/01.w_Defects/main.c ...
+28/53 files checked 52% done
+Checking ../itc_benchmarks/01.w_Defects/memory_allocation_failure.c ...
+[../itc_benchmarks/01.w_Defects/memory_allocation_failure.c:267]: (error) Return value of allocation function 'memory_allocation_failure_008_func_001' is not stored.
+[../itc_benchmarks/01.w_Defects/memory_allocation_failure.c:39]: (error) Memory leak: buf
+[../itc_benchmarks/01.w_Defects/memory_allocation_failure.c:284]: (error) Memory leak: buf
+29/53 files checked 54% done
+Checking ../itc_benchmarks/01.w_Defects/memory_leak.c ...
+[../itc_benchmarks/01.w_Defects/memory_leak.c:120]: (error) Memory leak: ptr
+[../itc_benchmarks/01.w_Defects/memory_leak.c:215]: (error) Memory leak: p
+[../itc_benchmarks/01.w_Defects/memory_leak.c:219]: (error) Memory leak: p
+[../itc_benchmarks/01.w_Defects/memory_leak.c:231]: (error) Memory leak: p
+[../itc_benchmarks/01.w_Defects/memory_leak.c:236]: (error) Memory leak: p
+[../itc_benchmarks/01.w_Defects/memory_leak.c:247]: (error) Memory leak: p1
+[../itc_benchmarks/01.w_Defects/memory_leak.c:309]: (error) Memory leak: p
+[../itc_benchmarks/01.w_Defects/memory_leak.c:353]: (error) Memory leak: p
+[../itc_benchmarks/01.w_Defects/memory_leak.c:23]: (error) Memory leak: buf
+[../itc_benchmarks/01.w_Defects/memory_leak.c:404]: (error) Memory leak: str1
+30/53 files checked 56% done
+Checking ../itc_benchmarks/01.w_Defects/not_return.c ...
+31/53 files checked 58% done
+Checking ../itc_benchmarks/01.w_Defects/null_pointer.c ...
+[../itc_benchmarks/01.w_Defects/null_pointer.c:23]: (error) Null pointer dereference: p
+[../itc_benchmarks/01.w_Defects/null_pointer.c:34]: (error) Null pointer dereference: p
+[../itc_benchmarks/01.w_Defects/null_pointer.c:63]: (error) Null pointer dereference: p
+[../itc_benchmarks/01.w_Defects/null_pointer.c:94]: (error) Null pointer dereference: p
+[../itc_benchmarks/01.w_Defects/null_pointer.c:117]: (error) Null pointer dereference: p
+[../itc_benchmarks/01.w_Defects/null_pointer.c:133]: (error) Null pointer dereference: p
+[../itc_benchmarks/01.w_Defects/null_pointer.c:142]: (warning) Possible null pointer dereference: p
+[../itc_benchmarks/01.w_Defects/null_pointer.c:159]: (error) Null pointer dereference: p1
+[../itc_benchmarks/01.w_Defects/null_pointer.c:173]: (error) Null pointer dereference: p2
+[../itc_benchmarks/01.w_Defects/null_pointer.c:180]: (error) Null pointer dereference: p
+[../itc_benchmarks/01.w_Defects/null_pointer.c:196]: (warning) Possible null pointer dereference: p
+[../itc_benchmarks/01.w_Defects/null_pointer.c:213]: (error) Null pointer dereference: p
+32/53 files checked 60% done
+Checking ../itc_benchmarks/01.w_Defects/overrun_st.c ...
+[../itc_benchmarks/01.w_Defects/overrun_st.c:21]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:32]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:44]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:55]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:66]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:77]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:88]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:99]: (error) Array 'buf[5][6]' index buf[5][5] out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:110]: (error) Array 'buf[5][6][7]' index buf[5][5][6] out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:142]: (error) Array 'sbuf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:158]: (error) Array 'overrun_st_012_s_gbl.buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:169]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:194]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:206]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:222]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:233]: (error) Array 'overrun_st_018_buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:264]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:280]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:570]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:706]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:749]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:292] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:293]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:305] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:306]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:319] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:320]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:332] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:333]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:345] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:346]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:358] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:359]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:371] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:372]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:400] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:402]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:414] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:415]: (error) Array 'overrun_st_031_buf_gbl[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:427] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:428]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:501] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:502]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:537] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:538]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:555] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:556]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:648] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:642]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:664] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:658]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:680] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:674]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+[../itc_benchmarks/01.w_Defects/overrun_st.c:695] -> [../itc_benchmarks/01.w_Defects/overrun_st.c:689]: (error) Array 'buf[5]' accessed at index 5, which is out of bounds.
+33/53 files checked 62% done
+Checking ../itc_benchmarks/01.w_Defects/ow_memcpy.c ...
+34/53 files checked 64% done
+Checking ../itc_benchmarks/01.w_Defects/pow_related_errors.c ...
+35/53 files checked 66% done
+Checking ../itc_benchmarks/01.w_Defects/ptr_subtraction.c ...
+36/53 files checked 67% done
+Checking ../itc_benchmarks/01.w_Defects/race_condition.c ...
+Checking ../itc_benchmarks/01.w_Defects/race_condition.c: CHECKER_POLYSPACE...
+Checking ../itc_benchmarks/01.w_Defects/race_condition.c: CHECKER_POLYSPACE;PRINT_DEBUG...
+37/53 files checked 69% done
+Checking ../itc_benchmarks/01.w_Defects/redundant_cond.c ...
+38/53 files checked 71% done
+Checking ../itc_benchmarks/01.w_Defects/return_local.c ...
+[../itc_benchmarks/01.w_Defects/return_local.c:36]: (error) Address of local auto-variable assigned to a function parameter.
+[../itc_benchmarks/01.w_Defects/return_local.c:19]: (error) Pointer to local array variable returned.
+39/53 files checked 73% done
+Checking ../itc_benchmarks/01.w_Defects/sign_conv.c ...
+40/53 files checked 75% done
+Checking ../itc_benchmarks/01.w_Defects/sleep_lock.c ...
+41/53 files checked 77% done
+Checking ../itc_benchmarks/01.w_Defects/st_cross_thread_access.c ...
+Checking ../itc_benchmarks/01.w_Defects/st_cross_thread_access.c: CHECKER_POLYSPACE...
+[../itc_benchmarks/01.w_Defects/st_cross_thread_access.c:400]: (error) Invalid number of character '{' when these macros are defined: 'CHECKER_POLYSPACE'.
+Checking ../itc_benchmarks/01.w_Defects/st_cross_thread_access.c: CHECKER_POLYSPACE;PRINT_DEBUG...
+[../itc_benchmarks/01.w_Defects/st_cross_thread_access.c:400]: (error) Invalid number of character '{' when these macros are defined: 'CHECKER_POLYSPACE;PRINT_DEBUG'.
+42/53 files checked 79% done
+Checking ../itc_benchmarks/01.w_Defects/st_overflow.c ...
+[../itc_benchmarks/01.w_Defects/st_overflow.c:55]: (error) Uninitialized variable: s
+[../itc_benchmarks/01.w_Defects/st_overflow.c:85]: (error) Uninitialized variable: s
+[../itc_benchmarks/01.w_Defects/st_overflow.c:124]: (error) Uninitialized variable: s
+[../itc_benchmarks/01.w_Defects/st_overflow.c:155]: (error) Uninitialized variable: s
+[../itc_benchmarks/01.w_Defects/st_overflow.c:232]: (error) Uninitialized variable: s
+43/53 files checked 81% done
+Checking ../itc_benchmarks/01.w_Defects/st_underrun.c ...
+[../itc_benchmarks/01.w_Defects/st_underrun.c:204]: (error) Buffer is accessed out of bounds: s.buf
+44/53 files checked 83% done
+Checking ../itc_benchmarks/01.w_Defects/stubs.c ...
+Checking ../itc_benchmarks/01.w_Defects/stubs.c: CHECKER_CODESONAR...
+Checking ../itc_benchmarks/01.w_Defects/stubs.c: CHECKER_POLYSPACE...
+Checking ../itc_benchmarks/01.w_Defects/stubs.c: CHECKER_PREVENT...
+Checking ../itc_benchmarks/01.w_Defects/stubs.c: CHECKER_VARVEL...
+Checking ../itc_benchmarks/01.w_Defects/stubs.c: MKSTUBS_CODESONAR...
+Checking ../itc_benchmarks/01.w_Defects/stubs.c: MKSTUBS_K7...
+Checking ../itc_benchmarks/01.w_Defects/stubs.c: MKSTUBS_POLYSPACE...
+Checking ../itc_benchmarks/01.w_Defects/stubs.c: MKSTUBS_PREVENT...
+Checking ../itc_benchmarks/01.w_Defects/stubs.c: MKSTUBS_VARVEL...
+45/53 files checked 84% done
+Checking ../itc_benchmarks/01.w_Defects/underrun_st.c ...
+[../itc_benchmarks/01.w_Defects/underrun_st.c:124]: (error) Array index -1 is out of bounds.
+[../itc_benchmarks/01.w_Defects/underrun_st.c:21]: (error) Array index -1 is out of bounds.
+[../itc_benchmarks/01.w_Defects/underrun_st.c:31]: (error) Array index -1 is out of bounds.
+[../itc_benchmarks/01.w_Defects/underrun_st.c:42]: (error) Array index -1 is out of bounds.
+[../itc_benchmarks/01.w_Defects/underrun_st.c:93]: (error) Array index -1 is out of bounds.
+46/53 files checked 86% done
+Checking ../itc_benchmarks/01.w_Defects/uninit_memory_access.c ...
+[../itc_benchmarks/01.w_Defects/uninit_memory_access.c:200]: (error) Memory leak: s
+[../itc_benchmarks/01.w_Defects/uninit_memory_access.c:26]: (error) Uninitialized variable: a
+[../itc_benchmarks/01.w_Defects/uninit_memory_access.c:53]: (error) Uninitialized variable: str2
+[../itc_benchmarks/01.w_Defects/uninit_memory_access.c:54]: (error) Uninitialized variable: str2
+[../itc_benchmarks/01.w_Defects/uninit_memory_access.c:126]: (error) Uninitialized variable: str2
+[../itc_benchmarks/01.w_Defects/uninit_memory_access.c:318]: (error) Uninitialized variable: str
+47/53 files checked 88% done
+Checking ../itc_benchmarks/01.w_Defects/uninit_pointer.c ...
+[../itc_benchmarks/01.w_Defects/uninit_pointer.c:235]: (error) Memory leak: ptr
+[../itc_benchmarks/01.w_Defects/uninit_pointer.c:412]: (error) Memory leak: s
+[../itc_benchmarks/01.w_Defects/uninit_pointer.c:29]: (error) Uninitialized variable: p
+[../itc_benchmarks/01.w_Defects/uninit_pointer.c:40]: (error) Uninitialized variable: p
+[../itc_benchmarks/01.w_Defects/uninit_pointer.c:70]: (error) Uninitialized variable: p
+[../itc_benchmarks/01.w_Defects/uninit_pointer.c:151]: (error) Uninitialized variable: ret
+[../itc_benchmarks/01.w_Defects/uninit_pointer.c:357]: (error) Uninitialized variable: ptr
+48/53 files checked 90% done
+Checking ../itc_benchmarks/01.w_Defects/uninit_var.c ...
+[../itc_benchmarks/01.w_Defects/uninit_var.c:74]: (error) Uninitialized variable: ret
+[../itc_benchmarks/01.w_Defects/uninit_var.c:110]: (error) Uninitialized struct member: s.uninit
+[../itc_benchmarks/01.w_Defects/uninit_var.c:130]: (error) Uninitialized variable: data
+[../itc_benchmarks/01.w_Defects/uninit_var.c:141]: (error) Uninitialized variable: ret
+[../itc_benchmarks/01.w_Defects/uninit_var.c:225]: (error) Uninitialized struct member: s.uninit
+[../itc_benchmarks/01.w_Defects/uninit_var.c:227]: (error) Uninitialized struct member: s.uninit
+[../itc_benchmarks/01.w_Defects/uninit_var.c:242]: (error) Uninitialized variable: val
+[../itc_benchmarks/01.w_Defects/uninit_var.c:275]: (error) Uninitialized struct member: s.uninit
+49/53 files checked 92% done
+Checking ../itc_benchmarks/01.w_Defects/unlock_without_lock.c ...
+Checking ../itc_benchmarks/01.w_Defects/unlock_without_lock.c: CHECKER_POLYSPACE...
+[../itc_benchmarks/01.w_Defects/unlock_without_lock.c:331]: (error) Invalid number of character '{' when these macros are defined: 'CHECKER_POLYSPACE'.
+Checking ../itc_benchmarks/01.w_Defects/unlock_without_lock.c: CHECKER_POLYSPACE;PRINT_DEBUG...
+[../itc_benchmarks/01.w_Defects/unlock_without_lock.c:331]: (error) Invalid number of character '{' when these macros are defined: 'CHECKER_POLYSPACE;PRINT_DEBUG'.
+50/53 files checked 94% done
+Checking ../itc_benchmarks/01.w_Defects/unused_var.c ...
+51/53 files checked 96% done
+Checking ../itc_benchmarks/01.w_Defects/wrong_arguments_func_pointer.c ...
+[../itc_benchmarks/01.w_Defects/wrong_arguments_func_pointer.c:336]: (error) Uninitialized variable: temp
+52/53 files checked 98% done
+Checking ../itc_benchmarks/01.w_Defects/zero_division.c ...
+[../itc_benchmarks/01.w_Defects/zero_division.c:22]: (error) Division by zero.
+[../itc_benchmarks/01.w_Defects/zero_division.c:33]: (error) Division by zero.
+[../itc_benchmarks/01.w_Defects/zero_division.c:46]: (error) Division by zero.
+[../itc_benchmarks/01.w_Defects/zero_division.c:140]: (error) Division by zero.
+[../itc_benchmarks/01.w_Defects/zero_division.c:165]: (error) Division by zero.
+[../itc_benchmarks/01.w_Defects/zero_division.c:177]: (error) Division by zero.
+[../itc_benchmarks/01.w_Defects/zero_division.c:194]: (error) Division by zero.
+[../itc_benchmarks/01.w_Defects/zero_division.c:205]: (error) Division by zero.
+[../itc_benchmarks/01.w_Defects/zero_division.c:224]: (error) Division by zero.
+53/53 files checked 100% done

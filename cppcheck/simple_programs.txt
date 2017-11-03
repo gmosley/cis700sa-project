@@ -1,0 +1,34 @@
+[../simple_programs/abo1.c:9]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/abo2.c:10]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/abo3.c:12]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/abo7.c:11]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/abo8.c:11]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/e2.c:18]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/e3.c:9]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/e4.c:9]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/e5.c:9]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/examples/abo1.c:9]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/examples/abo2.c:10]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/examples/abo3.c:12]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/examples/abo7.c:11]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/examples/abo8.c:11]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/examples/e2.c:18]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/examples/e3.c:9]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/examples/e4.c:9]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/examples/e5.c:9]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/examples/fs1.c:13]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/examples/fs2.c:8]: (error) snprintf format string requires 4 parameters but only 1 is given.
+[../simple_programs/examples/fs2.c:9]: (error) snprintf format string requires 4 parameters but only 1 is given.
+[../simple_programs/examples/fs3.c:9]: (error) snprintf format string requires 4 parameters but only 1 is given.
+[../simple_programs/examples/fs4.c:9]: (error) snprintf format string requires 2 parameters but only 1 is given.
+[../simple_programs/examples/n5.c:14]: (error) Width 80 given in format string (no. 2) is larger than destination buffer 'buf[80]', use %79s to prevent overflowing it.
+[../simple_programs/examples/n5.c:18]: (error) Memory leak: args
+[../simple_programs/examples/sg3.c:16]: (error) Memory leak: msg
+[../simple_programs/fs1.c:13]: (error) Buffer overrun possible for long command line arguments.
+[../simple_programs/fs2.c:8]: (error) snprintf format string requires 4 parameters but only 1 is given.
+[../simple_programs/fs2.c:9]: (error) snprintf format string requires 4 parameters but only 1 is given.
+[../simple_programs/fs3.c:9]: (error) snprintf format string requires 4 parameters but only 1 is given.
+[../simple_programs/fs4.c:9]: (error) snprintf format string requires 2 parameters but only 1 is given.
+[../simple_programs/n5.c:14]: (error) Width 80 given in format string (no. 2) is larger than destination buffer 'buf[80]', use %79s to prevent overflowing it.
+[../simple_programs/n5.c:18]: (error) Memory leak: args
+[../simple_programs/sg3.c:16]: (error) Memory leak: msg
