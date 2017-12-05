@@ -87,7 +87,8 @@ class CodeHtmlFormatter(HtmlFormatter):
 with open('source.html', 'w') as f:
     f.write('<!DOCTYPE html>\n<html>\n<head>\n<style>\n')
     f.write(HtmlFormatter().get_style_defs('.highlight'))
-    f.write('\n</style>\n</head>\n<body>\n')
+    f.write('\n.result { color: #F03434 }\n')
+    f.write('</style>\n</head>\n<body>\n')
 
     # needed for syntax highlighting
     f.write('<div class="highlight"><pre>\n')
@@ -98,7 +99,7 @@ with open('source.html', 'w') as f:
 
         if lineno in tool_reports:
             for special_line in tool_reports[lineno]:
-                f.write('    --> ' + special_line + '\n')
+                f.write('<span class=\"result\">    {}</span>\n'.format(special_line))
 
     # close syntax highlighting
     f.write('</pre></div>\n')
