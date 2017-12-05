@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
 
-SOURCE_FILE=itc_benchmarks/01.w_Defects/null_pointer.c
-BUILD_COMMAND="clang -c -I itc_benchmarks/include/ $SOURCE_FILE"
+SOURCE_FILE=$1
+BUILD_COMMAND="clang -c $SOURCE_FILE"
+
+if [[ $# -eq 0 ]] ; then
+    echo "usage ./analyze <source.c>"
+    exit 1
+fi
+
+if [ ! -f $SOURCE_FILE ]; then
+    echo "$SOURCE_FILE not found!"
+    exit 1
+fi
 
 rm -rf results
 mkdir results
