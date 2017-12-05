@@ -1,5 +1,3 @@
-# This is a very rough prototype to generate html files containg the reports from all files
-
 import plistlib
 from collections import defaultdict
 import pygments
@@ -12,9 +10,33 @@ import pprint
 import sys
 import subprocess
 import glob
+import os
+
+if len(sys.argv) != 2:
+    print('usage python3 run.py <source.c>')
+    exit(1)
 
 source_input = sys.argv[1]
+
+# run each tool on the source code
 subprocess.run(['./analyze.sh', source_input])
+
+# add tool outputs if they exist
+tool_outputs = []
+
+if os.path.isfile('results/flawfinder.txt'):
+    tool_outputs.append(('flawfinder', 'results/flawfinder.txt'))
+
+cppcheck_glob = glob.glob('results/cppcheck/*.plist')
+if len(cppcheck_glob) == 1:
+    tool_outputs.append(('cppcheck', cppcheck_glob[0]))
+
+scanbuild_glob = glob.glob('results/scan-build/*/*.plist')
+if len(cppcheck_glob) == 1:
+    tool_outputs.append(('scan-build', scanbuild_glob[0]))
+
+if os.path.isfile('results/infer/report.json'):
+    tool_outputs.append(('infer', 'results/infer/report.json'))
 
 
 tool_reports = defaultdict(list)
@@ -63,15 +85,16 @@ def parse_infer(tool, report_file):
             tool_reports[result['line']].append(mesg)
 
 
-tool_inputs = [
-    ('flawfinder', 'results/flawfinder.txt', parse_flawfinder),
-    ('cppcheck', glob.glob('results/cppcheck/*.plist')[0], parse_plist),
-    ('scan-build', glob.glob('results/scan-build/*/*.plist')[0], parse_plist),
-    ('infer', 'results/infer/report.json', parse_infer)
-]
-
-for tool, report_file, parse_function in tool_inputs:
-    parse_function(tool, report_file)
+for tool, report_file in tool_outputs:
+    if tool is 'flawfinder':
+        parse_flawfinder(tool, report_file)
+    elif tool in ['cppcheck', 'scan-build']:
+        parse_plist(tool, report_file)
+    elif tool is 'infer':
+        parse_infer(tool, report_file)
+    else:
+        print('unknown tool: ' + tool)
+        exit(1)
 
 with open(source_input, 'r') as f:
     source_data = f.read()
@@ -104,7 +127,7 @@ with open('combined-report.html', 'w') as f:
 
         if lineno in tool_reports:
             for special_line in tool_reports[lineno]:
-                f.write('<span class=\"result\">    {}</span>\n'.format(special_line))
+                f.write('<span class=\"result\">    > {}</span>\n'.format(special_line))
 
     # close syntax highlighting
     f.write('</pre></div>\n')
