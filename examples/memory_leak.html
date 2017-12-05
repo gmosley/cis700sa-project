@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #f8f8f8; }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #888888 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
+.result { color: #F03434 }
+</style>
+</head>
+<body>
+<div class="highlight"><pre>
+  1 <span class="cm">/********Software Analysis - FY2013*************/</span>
+  2 <span class="cm">/*</span>
+  3 <span class="cm">* File Name: memory_leak.c</span>
+  4 <span class="cm">* Defect Classification</span>
+  5 <span class="cm">* ---------------------</span>
+  6 <span class="cm">* Defect Type: Resource management defects</span>
+  7 <span class="cm">* Defect Sub-type: Memory leakage</span>
+  8 <span class="cm">*</span>
+  9 <span class="cm">*/</span>
+ 10 
+ 11 <span class="cp">#include</span> <span class="cpf">&quot;HeaderFile.h&quot;</span><span class="cp"></span>
+ 12 
+ 13 <span class="kt">int</span> <span class="nf">rand</span> <span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+ 14 
+ 15 <span class="cm">/*</span>
+ 16 <span class="cm">* Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+ 17 <span class="cm">* Complexity: When using a pointer to char in an infinite for loop</span>
+ 18 <span class="cm">*/</span>
+ 19 <span class="kt">void</span> <span class="nf">memory_leak_001</span> <span class="p">()</span>
+ 20 <span class="p">{</span>
+ 21 	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+ 22 	<span class="kt">char</span> <span class="o">*</span><span class="n">buf</span><span class="p">;</span>
+ 23 	<span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="result">    cppcheck: (error memleak) Memory leak: buf</span>
+ 24 	<span class="p">{</span>
+ 25 		<span class="n">buf</span><span class="o">=</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+ 26 		<span class="k">if</span><span class="p">(</span><span class="n">buf</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+ 27 		<span class="p">{</span>
+ 28 		<span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="result">    infer: (HIGH Memory Leak) memory dynamically allocated to `buf` by call to `calloc()` at line 25, column 15 is not reachable after line 28, column 3.</span>
+ 29 		<span class="cm">/*if(i&gt;=10) */</span>
+ 30 		<span class="p">}</span>
+ 31 		<span class="cm">/*break;*/</span>
+ 32 	<span class="p">}</span>
+ 33 <span class="p">}</span>
+ 34 
+ 35 <span class="cm">/*</span>
+ 36 <span class="cm"> * Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+ 37 <span class="cm"> * When using double pointers to the type INT</span>
+ 38 <span class="cm"> */</span>
+ 39 
+ 40 <span class="kt">void</span> <span class="nf">memory_leak_002</span> <span class="p">()</span>
+ 41 <span class="p">{</span>
+ 42 	<span class="kt">int</span> <span class="o">**</span><span class="n">ptr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">**</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">));</span>
+ 43 	<span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">;</span>
+ 44 
+ 45 	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+ 46 		<span class="n">ptr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+<span class="result">    infer: (HIGH Null Dereference) pointer `ptr` last assigned on line 42 could be null and is dereferenced at line 46, column 3.</span>
+ 47 
+ 48 	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+ 49 	<span class="p">{</span>
+ 50 		<span class="k">for</span><span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+ 51 		<span class="p">{</span>
+ 52 			<span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">ptr</span><span class="o">+</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="n">j</span><span class="p">)</span><span class="o">=</span><span class="n">i</span><span class="p">;</span>
+ 53 		<span class="p">}</span>
+ 54 	<span class="p">}</span>
+ 55 	<span class="n">free</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+ 56 <span class="p">}</span>
+ 57 
+ 58 <span class="cm">/*</span>
+ 59 <span class="cm"> * Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+ 60 <span class="cm"> *  Memory allocated in a function and Memory used in another function</span>
+ 61 <span class="cm"> */</span>
+ 62 <span class="kt">void</span> <span class="nf">memory_leak_003_func_001</span> <span class="p">(</span><span class="kt">int</span> <span class="n">len</span><span class="p">,</span><span class="kt">char</span> <span class="o">**</span><span class="n">stringPtr</span><span class="p">)</span>
+ 63 <span class="p">{</span>
+ 64 	<span class="kt">char</span> <span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">len</span><span class="o">+</span><span class="mi">1</span><span class="p">));</span>
+ 65 	<span class="o">*</span><span class="n">stringPtr</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
+ 66 <span class="p">}</span>
+ 67 
+ 68 <span class="kt">void</span> <span class="nf">memory_leak_003</span> <span class="p">()</span>
+ 69 <span class="p">{</span>
+ 70 	<span class="kt">char</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="s">&quot;This is a string&quot;</span><span class="p">;</span>
+ 71 	<span class="kt">char</span> <span class="o">*</span><span class="n">str1</span><span class="p">;</span>
+ 72 	<span class="n">memory_leak_003_func_001</span><span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="n">str</span><span class="p">),</span><span class="o">&amp;</span><span class="n">str1</span><span class="p">);</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+<span class="result">    flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+ 73 	<span class="n">strcpy</span><span class="p">(</span><span class="n">str1</span><span class="p">,</span><span class="n">str</span><span class="p">);</span>
+<span class="result">    flawfinder: ([4]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
+<span class="result">    infer: (HIGH Null Dereference) pointer `str1` last assigned on line 72 could be null and is dereferenced by call to `strcpy()` at line 73, column 2.</span>
+ 74 <span class="p">}</span>
+<span class="result">    scan-build: (Memory error unix.Malloc) Potential leak of memory pointed to by 'str1'</span>
+<span class="result">    infer: (HIGH Memory Leak) memory dynamically allocated to `str1` by call to `memory_leak_003_func_001()` at line 72, column 2 is not reachable after line 74, column 1.</span>
+ 75 
+ 76 <span class="cm">/*</span>
+ 77 <span class="cm"> * Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+ 78 <span class="cm"> * When using pointers to the structure with an string as a member of the structure</span>
+ 79 <span class="cm"> */</span>
+ 80 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+ 81 	<span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+ 82 	<span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+ 83 	<span class="kt">char</span> <span class="o">*</span><span class="n">buf</span><span class="p">;</span>
+ 84 <span class="p">}</span> <span class="n">memory_leak_004_s_001</span><span class="p">;</span>
+ 85 
+ 86 <span class="kt">void</span> <span class="nf">memory_leak_004</span> <span class="p">()</span>
+ 87 <span class="p">{</span>
+ 88 	<span class="n">memory_leak_004_s_001</span><span class="o">*</span> <span class="n">s</span><span class="o">=</span><span class="p">(</span><span class="n">memory_leak_004_s_001</span><span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">memory_leak_004_s_001</span><span class="p">))</span> <span class="p">;</span>
+ 89 	<span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="o">=</span><span class="s">&quot;This is a string&quot;</span><span class="p">;</span>
+ 90 	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+ 91 	<span class="k">if</span><span class="p">(</span><span class="n">s</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+ 92 	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span> <span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+ 93 	<span class="p">{</span>
+ 94 		<span class="p">(</span><span class="n">s</span><span class="o">+</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">buf</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="mi">25</span><span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+ 95 	<span class="p">}</span>
+ 96 	<span class="n">strcpy</span><span class="p">((</span><span class="n">s</span><span class="o">+</span><span class="mi">4</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">,</span><span class="n">s1</span><span class="p">);</span>
+<span class="result">    flawfinder: ([4]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
+<span class="result">    scan-build: (Logic error core.NullDereference) Access to field 'buf' results in a dereference of a null pointer</span>
+ 97 	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span> <span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">);</span>
+ 98 	<span class="n">free</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+ 99 <span class="p">}</span>
+100 
+101 <span class="cm">/*</span>
+102 <span class="cm"> * Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+103 <span class="cm"> *  When using pointer to float Memory is allocated and freed in conditional statement(if)</span>
+104 <span class="cm"> */</span>
+105 <span class="kt">void</span> <span class="nf">memory_leak_005</span><span class="p">()</span>
+106 <span class="p">{</span>
+107 	<span class="kt">float</span> <span class="o">*</span><span class="n">ptr</span><span class="p">;</span>
+108 	<span class="kt">int</span> <span class="n">flag</span><span class="o">=</span><span class="mi">10</span><span class="p">;</span>
+109 
+110 	<span class="k">if</span><span class="p">(</span><span class="n">flag</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+111 	<span class="p">{</span>
+112 		<span class="n">ptr</span><span class="o">=</span> <span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+113 		<span class="k">if</span><span class="p">(</span><span class="n">ptr</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+114 		<span class="p">{</span>
+115         <span class="o">*</span><span class="p">(</span><span class="n">ptr</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mf">10.5</span><span class="p">;</span>
+116 		<span class="p">}</span>
+117 	<span class="p">}</span>
+118     <span class="k">if</span><span class="p">(</span><span class="n">flag</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+119 	<span class="n">free</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+120 <span class="p">}</span>
+<span class="result">    cppcheck: (error memleak) Memory leak: ptr</span>
+<span class="result">    scan-build: (Memory error unix.Malloc) Potential leak of memory pointed to by 'ptr'</span>
+121 
+122 <span class="cm">/*</span>
+123 <span class="cm"> * Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+124 <span class="cm"> *  When using pointer to double Memory is allocated and freed based on return value of function</span>
+125 <span class="cm"> */</span>
+126 <span class="kt">int</span> <span class="nf">memory_leak_006_func_001</span><span class="p">(</span><span class="kt">int</span> <span class="n">flag</span><span class="p">)</span>
+127 <span class="p">{</span>
+128    <span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+129    <span class="k">if</span> <span class="p">(</span><span class="n">flag</span> <span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+130 	   <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+131    <span class="k">else</span>
+132 	   <span class="n">ret</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+133    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+134 <span class="p">}</span>
+135 
+136 <span class="kt">void</span> <span class="nf">memory_leak_006</span><span class="p">()</span>
+137 <span class="p">{</span>
+138 	<span class="kt">double</span> <span class="o">*</span><span class="n">dptr</span><span class="p">;</span>
+139 	<span class="kt">int</span> <span class="n">flag</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+140 
+141 	<span class="k">if</span><span class="p">(</span><span class="n">memory_leak_006_func_001</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+142 	<span class="p">{</span>
+143 		<span class="n">dptr</span><span class="o">=</span> <span class="p">(</span><span class="kt">double</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+144 		<span class="k">if</span><span class="p">(</span><span class="n">dptr</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+145 		<span class="p">{</span>
+146            <span class="o">*</span><span class="p">(</span><span class="n">dptr</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mf">10.50000</span><span class="p">;</span>
+147 		<span class="p">}</span>
+148 	<span class="p">}</span>
+149     <span class="k">if</span><span class="p">(</span><span class="n">memory_leak_006_func_001</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span> <span class="o">!=</span><span class="mi">0</span><span class="p">)</span>
+150 	<span class="n">free</span><span class="p">(</span><span class="n">dptr</span><span class="p">);</span>
+151 <span class="p">}</span>
+<span class="result">    scan-build: (Memory error unix.Malloc) Potential leak of memory pointed to by 'dptr'</span>
+152 
+153 <span class="cm">/*</span>
+154 <span class="cm"> * Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+155 <span class="cm"> *  When using Switch case statements and void pointer</span>
+156 <span class="cm"> */</span>
+157 <span class="kt">void</span> <span class="o">*</span><span class="n">vptr</span><span class="p">;</span>
+158 <span class="kt">int</span> <span class="nf">memory_leak_007_func_001</span> <span class="p">(</span><span class="kt">int</span> <span class="n">flag</span><span class="p">)</span>
+159 <span class="p">{</span>
+160 	<span class="k">switch</span> <span class="p">(</span><span class="n">flag</span><span class="p">)</span>
+161 	<span class="p">{</span>
+162 		<span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+163 		<span class="p">{</span>
+164 			<span class="n">vptr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span><span class="n">calloc</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+165 			<span class="k">if</span><span class="p">(</span><span class="n">vptr</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+166 			<span class="p">{</span>
+167 			   <span class="o">*</span><span class="p">((</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">vptr</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+168 			<span class="p">}</span>
+169 			<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+170 		<span class="p">}</span>
+171 		<span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+172 		<span class="p">{</span>
+173 			<span class="n">vptr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">calloc</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span>
+174 			<span class="k">if</span><span class="p">(</span><span class="n">vptr</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+175 			<span class="p">{</span>
+176 			   <span class="o">*</span><span class="p">((</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">vptr</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="sc">&#39;a&#39;</span><span class="p">;</span>
+177 			<span class="p">}</span>
+178 			<span class="k">return</span> <span class="mi">2</span><span class="p">;</span>
+179 		<span class="p">}</span>
+180 		<span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+181 		<span class="p">{</span>
+182 			<span class="n">vptr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span> <span class="o">*</span><span class="p">)</span><span class="n">calloc</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+183 			<span class="k">if</span><span class="p">(</span><span class="n">vptr</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+184 			<span class="p">{</span>
+185 			   <span class="o">*</span><span class="p">((</span><span class="kt">float</span><span class="o">*</span><span class="p">)</span><span class="n">vptr</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mf">5.5</span><span class="p">;</span>
+186 			<span class="p">}</span>
+187 			<span class="k">return</span> <span class="mi">3</span><span class="p">;</span>
+188 		<span class="p">}</span>
+189 		<span class="k">default</span><span class="o">:</span>
+190 			<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+191 	<span class="p">}</span>
+192 <span class="p">}</span>
+193 
+194 <span class="kt">void</span> <span class="nf">memory_leak_007</span> <span class="p">()</span>
+195 <span class="p">{</span>
+196 	<span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+197 	<span class="n">ret</span> <span class="o">=</span> <span class="n">memory_leak_007_func_001</span> <span class="p">(</span><span class="n">rand</span><span class="p">());</span>
+198 	<span class="k">if</span><span class="p">(</span><span class="n">ret</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+199 		<span class="k">if</span><span class="p">(</span><span class="n">vptr</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+200 		<span class="p">{</span>
+201 		<span class="n">free</span><span class="p">(</span><span class="n">vptr</span><span class="p">);</span>
+202 		<span class="p">}</span>
+203 <span class="p">}</span>
+204 
+205 <span class="cm">/*</span>
+206 <span class="cm"> * Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+207 <span class="cm">*  When using 1 single pointer alias</span>
+208 <span class="cm">*/</span>
+209 <span class="kt">void</span> <span class="nf">memory_leak_008</span> <span class="p">()</span>
+210 <span class="p">{</span>
+211 	<span class="kt">int</span> <span class="o">*</span><span class="n">ptr</span><span class="o">=</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+212 	<span class="kt">int</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+<span class="result">    scan-build: (Dead store deadcode.DeadStores) Value stored to 'p' during its initialization is never read</span>
+<span class="result">    infer: (HIGH Dead Store) The value written to &p is never used.</span>
+<span class="result">    infer: (HIGH Memory Leak) memory dynamically allocated to `p` by call to `malloc()` at line 212, column 17 is not reachable after line 212, column 2.</span>
+213 	<span class="k">if</span><span class="p">(</span><span class="n">ptr</span> <span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+214 	<span class="p">{</span>
+215 	<span class="n">p</span> <span class="o">=</span> <span class="n">ptr</span><span class="p">;</span>
+<span class="result">    cppcheck: (error memleak) Memory leak: p</span>
+216 	<span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+217 	<span class="n">free</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+218 	<span class="p">}</span>
+219 <span class="p">}</span>
+<span class="result">    cppcheck: (error memleak) Memory leak: p</span>
+<span class="result">    scan-build: (Memory error unix.Malloc) Potential leak of memory pointed to by 'p'</span>
+220 
+221 <span class="cm">/*</span>
+222 <span class="cm"> * Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+223 <span class="cm">*  When using 1 single pointer alias - dangling pointer</span>
+224 <span class="cm">*/</span>
+225 <span class="kt">void</span> <span class="nf">memory_leak_009</span> <span class="p">()</span>
+226 <span class="p">{</span>
+227 	<span class="kt">float</span> <span class="o">*</span><span class="n">ptr</span><span class="o">=</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+228 	<span class="kt">int</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+<span class="result">    scan-build: (Dead store deadcode.DeadStores) Value stored to 'p' during its initialization is never read</span>
+<span class="result">    infer: (HIGH Dead Store) The value written to &p is never used.</span>
+<span class="result">    infer: (HIGH Memory Leak) memory dynamically allocated to `p` by call to `malloc()` at line 228, column 18 is not reachable after line 228, column 2.</span>
+229 	<span class="k">if</span><span class="p">(</span><span class="n">ptr</span> <span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+230 	<span class="p">{</span>
+231           <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span><span class="n">ptr</span><span class="p">;</span>
+<span class="result">    cppcheck: (error memleak) Memory leak: p</span>
+232 	   <span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">;</span>
+233 	   <span class="n">free</span> <span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+234 	   <span class="n">ptr</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="result">    infer: (HIGH Dead Store) The value written to &ptr is never used.</span>
+235 	<span class="p">}</span>
+236 <span class="p">}</span>
+<span class="result">    cppcheck: (error memleak) Memory leak: p</span>
+<span class="result">    scan-build: (Memory error unix.Malloc) Potential leak of memory pointed to by 'p'</span>
+237 
+238 <span class="cm">/*</span>
+239 <span class="cm"> * Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+240 <span class="cm">*  When using 2 single pointer alias</span>
+241 <span class="cm">*/</span>
+242 <span class="kt">void</span> <span class="nf">memory_leak_0010</span> <span class="p">()</span>
+243 <span class="p">{</span>
+244 	<span class="kt">int</span> <span class="o">*</span><span class="n">ptr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+245 	<span class="kt">int</span> <span class="o">*</span><span class="n">p1</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+<span class="result">    scan-build: (Dead store deadcode.DeadStores) Value stored to 'p1' during its initialization is never read</span>
+<span class="result">    infer: (HIGH Dead Store) The value written to &p1 is never used.</span>
+<span class="result">    infer: (HIGH Memory Leak) memory dynamically allocated to `p1` by call to `calloc()` at line 245, column 19 is not reachable after line 245, column 2.</span>
+246 	<span class="kt">int</span> <span class="o">*</span><span class="n">p2</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="result">    infer: (HIGH Dead Store) The value written to &p2 is never used.</span>
+247 	<span class="n">p1</span> <span class="o">=</span> <span class="n">ptr</span><span class="p">;</span>
+<span class="result">    cppcheck: (error memleak) Memory leak: p1</span>
+248 	<span class="n">p2</span> <span class="o">=</span> <span class="n">p1</span><span class="p">;</span>
+<span class="result">    scan-build: (Memory error unix.Malloc) Potential leak of memory pointed to by 'p1'</span>
+249 	<span class="o">*</span><span class="p">(</span><span class="n">p2</span><span class="o">+</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+250 	<span class="n">free</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+251 <span class="p">}</span>
+252 
+253 <span class="cm">/*</span>
+254 <span class="cm">* Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+255 <span class="cm">*  When using alias(union) - a union containing two methods of accessing the same data (within the same function) alias</span>
+256 <span class="cm">*/</span>
+257 <span class="k">typedef</span> <span class="k">union</span> <span class="p">{</span>
+258     <span class="kt">char</span> <span class="o">*</span> <span class="n">u1</span><span class="p">;</span>
+259     <span class="kt">char</span> <span class="o">*</span> <span class="n">u2</span><span class="p">;</span>
+260 <span class="p">}</span> <span class="n">memory_leak_0011_uni_001</span><span class="p">;</span>
+261 
+262 
+263 <span class="kt">void</span> <span class="nf">memory_leak_0011</span><span class="p">()</span>
+264 <span class="p">{</span>
+265     <span class="kt">char</span> <span class="o">*</span> <span class="n">buf</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="result">    infer: (HIGH Dead Store) The value written to &buf is never used.</span>
+266     <span class="n">memory_leak_0011_uni_001</span> <span class="n">un</span><span class="p">;</span>
+267     <span class="n">buf</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">calloc</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+268 	<span class="k">if</span><span class="p">(</span><span class="n">buf</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+269 	<span class="p">{</span>
+270     <span class="n">strcpy</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s">&quot;This Is A String&quot;</span><span class="p">);</span>
+<span class="result">    flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+271     <span class="n">un</span><span class="p">.</span><span class="n">u1</span> <span class="o">=</span> <span class="n">buf</span><span class="p">;</span>
+272 	<span class="p">}</span>
+273     <span class="p">{</span>
+274     	<span class="kt">char</span> <span class="o">*</span> <span class="n">buf</span> <span class="p">;</span>
+275 
+276     	<span class="n">buf</span> <span class="o">=</span> <span class="n">un</span><span class="p">.</span><span class="n">u2</span><span class="p">;</span>
+<span class="result">    scan-build: (Dead store deadcode.DeadStores) Value stored to 'buf' is never read</span>
+<span class="result">    scan-build: (Memory error unix.Malloc) Potential leak of memory pointed to by 'un.u1'</span>
+<span class="result">    infer: (HIGH Dead Store) The value written to &buf is never used.</span>
+<span class="result">    infer: (HIGH Memory Leak) memory dynamically allocated to `un.u1` by call to `calloc()` at line 267, column 19 is not reachable after line 276, column 6.</span>
+277     <span class="p">}</span>
+278 <span class="p">}</span>
+279 
+280 <span class="cm">/*</span>
+281 <span class="cm"> * Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+282 <span class="cm"> * Complexity: Union of pointer	Constant	 expressions	Write</span>
+283 <span class="cm"> */</span>
+284 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+285 	<span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+286 	<span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+287 <span class="p">}</span> <span class="n">memory_leak_0012_s_001</span><span class="p">;</span>
+288 
+289 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+290 	<span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+291 	<span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+292 <span class="p">}</span> <span class="n">memory_leak_0012_s_002</span><span class="p">;</span>
+293 
+294 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+295 	<span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+296 	<span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+297 <span class="p">}</span> <span class="n">memory_leak_0012_s_003</span><span class="p">;</span>
+298 
+299 <span class="k">typedef</span> <span class="k">union</span> <span class="p">{</span>
+300 	<span class="n">memory_leak_0012_s_001</span> <span class="n">s1</span><span class="p">;</span>
+301 	<span class="n">memory_leak_0012_s_002</span> <span class="n">s2</span><span class="p">;</span>
+302 	<span class="n">memory_leak_0012_s_003</span> <span class="n">s3</span><span class="p">;</span>
+303 <span class="p">}</span> <span class="n">memory_leak_0012_uni_001</span><span class="p">;</span>
+304 
+305 <span class="kt">void</span> <span class="nf">memory_leak_0012</span> <span class="p">()</span>
+306 <span class="p">{</span>
+307 	<span class="n">memory_leak_0012_uni_001</span> <span class="o">*</span><span class="n">u</span> <span class="o">=</span> <span class="p">(</span><span class="n">memory_leak_0012_uni_001</span> <span class="o">*</span> <span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span> <span class="n">memory_leak_0012_uni_001</span> <span class="p">));</span>
+308 	<span class="n">memory_leak_0012_uni_001</span> <span class="o">*</span><span class="n">p</span>  <span class="o">=</span> <span class="p">(</span><span class="n">memory_leak_0012_uni_001</span> <span class="o">*</span> <span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span> <span class="n">memory_leak_0012_uni_001</span> <span class="p">));</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+<span class="result">    scan-build: (Dead store deadcode.DeadStores) Value stored to 'p' during its initialization is never read</span>
+<span class="result">    infer: (HIGH Dead Store) The value written to &p is never used.</span>
+<span class="result">    infer: (HIGH Memory Leak) memory dynamically allocated to `p` by call to `malloc()` at line 308, column 62 is not reachable after line 308, column 2.</span>
+309 	<span class="n">p</span> <span class="o">=</span> <span class="n">u</span><span class="p">;</span>
+<span class="result">    cppcheck: (error memleak) Memory leak: p</span>
+310 
+311 	<span class="n">p</span><span class="o">-&gt;</span><span class="n">s1</span><span class="p">.</span><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="result">    scan-build: (Memory error unix.Malloc) Potential leak of memory pointed to by 'p'</span>
+312 
+313 	<span class="n">free</span><span class="p">(</span><span class="n">u</span><span class="p">);</span>
+314 <span class="p">}</span>
+315 
+316 <span class="cm">/*</span>
+317 <span class="cm"> * Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+318 <span class="cm"> * Complexity: Union of pointer	Constant	 expressions	Write</span>
+319 <span class="cm"> */</span>
+320 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+321 	<span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+322 	<span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+323 <span class="p">}</span> <span class="n">memory_leak_0013_s_001</span><span class="p">;</span>
+324 
+325 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+326 	<span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+327 	<span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+328 <span class="p">}</span> <span class="n">memory_leak_0013_s_002</span><span class="p">;</span>
+329 
+330 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+331 	<span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+332 	<span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+333 <span class="p">}</span> <span class="n">memory_leak_0013_s_003</span><span class="p">;</span>
+334 
+335 <span class="k">typedef</span> <span class="k">union</span> <span class="p">{</span>
+336 	<span class="n">memory_leak_0013_s_001</span> <span class="o">*</span><span class="n">s1</span><span class="p">;</span>
+337 	<span class="n">memory_leak_0013_s_002</span> <span class="o">*</span><span class="n">s2</span><span class="p">;</span>
+338 	<span class="n">memory_leak_0013_s_003</span> <span class="o">*</span><span class="n">s3</span><span class="p">;</span>
+339 <span class="p">}</span> <span class="n">memory_leak_0013_uni_001</span><span class="p">;</span>
+340 
+341 <span class="kt">void</span> <span class="nf">memory_leak_0013</span> <span class="p">()</span>
+342 <span class="p">{</span>
+343 	<span class="n">memory_leak_0013_uni_001</span> <span class="o">*</span><span class="n">u</span> <span class="o">=</span> <span class="p">(</span><span class="n">memory_leak_0013_uni_001</span> <span class="o">*</span> <span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span> <span class="n">memory_leak_0013_uni_001</span> <span class="p">));</span>
+344 	<span class="k">if</span><span class="p">(</span><span class="n">u</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+345 	<span class="p">{</span>
+346 	<span class="n">u</span><span class="o">-&gt;</span><span class="n">s1</span> <span class="o">=</span> <span class="p">(</span><span class="n">memory_leak_0013_s_001</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">memory_leak_0013_s_001</span><span class="p">));</span>
+347 	<span class="p">}</span>
+348 	<span class="n">memory_leak_0013_uni_001</span> <span class="o">*</span><span class="n">p</span>  <span class="o">=</span> <span class="p">(</span><span class="n">memory_leak_0013_uni_001</span> <span class="o">*</span> <span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span> <span class="n">memory_leak_0013_uni_001</span> <span class="p">));</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+349 	<span class="n">p</span><span class="o">-&gt;</span><span class="n">s1</span> <span class="o">=</span> <span class="p">(</span><span class="n">memory_leak_0013_s_001</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">memory_leak_0013_s_001</span><span class="p">));</span>
+<span class="result">    infer: (HIGH Null Dereference) pointer `p` last assigned on line 348 could be null and is dereferenced at line 349, column 2.</span>
+350 	
+351 	<span class="k">if</span><span class="p">(</span><span class="n">u</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+352 	<span class="p">{</span>
+353 	<span class="n">p</span> <span class="o">=</span> <span class="n">u</span><span class="p">;</span>
+<span class="result">    cppcheck: (error memleak) Memory leak: p</span>
+354 	<span class="n">p</span><span class="o">-&gt;</span><span class="n">s1</span><span class="o">-&gt;</span><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+355     <span class="n">free</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">s1</span><span class="p">);</span>
+356 	<span class="n">free</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+357 
+358 	<span class="p">}</span>
+359 <span class="p">}</span>
+<span class="result">    scan-build: (Memory error unix.Malloc) Potential leak of memory pointed to by 'p'</span>
+360 
+361 <span class="cm">/*</span>
+362 <span class="cm"> * Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+363 <span class="cm">*  Using two double pointers to the same value within the same function</span>
+364 <span class="cm">*/</span>
+365 <span class="kt">void</span> <span class="nf">memory_leak_0014</span> <span class="p">()</span>
+366 <span class="p">{</span>
+367     <span class="kt">float</span> <span class="o">*</span> <span class="n">fptr</span><span class="p">;</span>
+368     <span class="kt">float</span> <span class="o">**</span><span class="n">fp1</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">fptr</span><span class="p">;</span>
+369     <span class="kt">float</span> <span class="o">**</span><span class="n">fp2</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">fptr</span><span class="p">;</span>
+370     <span class="n">fptr</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="result">    infer: (HIGH Dead Store) The value written to &fptr is never used.</span>
+371     <span class="p">{</span>
+372         <span class="kt">float</span> <span class="o">*</span> <span class="n">fptr</span> <span class="o">=</span> <span class="o">*</span><span class="n">fp1</span><span class="p">;</span>
+<span class="result">    scan-build: (Dead store deadcode.DeadStores) Value stored to 'fptr' during its initialization is never read</span>
+<span class="result">    infer: (HIGH Dead Store) The value written to &fptr is never used.</span>
+373         <span class="n">fptr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span> <span class="o">*</span><span class="p">)</span><span class="n">calloc</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+374         <span class="k">if</span><span class="p">(</span><span class="n">fptr</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+375         <span class="p">{</span>
+376         <span class="o">*</span><span class="p">(</span><span class="n">fptr</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mf">50.5</span><span class="p">;</span>
+377         <span class="o">*</span><span class="n">fp1</span> <span class="o">=</span> <span class="n">fptr</span><span class="p">;</span>
+378         <span class="p">}</span>
+379     <span class="p">}</span>
+380     <span class="p">{</span>
+381         <span class="kt">float</span> <span class="o">*</span> <span class="n">fptr1</span> <span class="p">;</span>
+382         <span class="n">fptr1</span> <span class="o">=</span> <span class="o">*</span><span class="n">fp2</span><span class="p">;</span>
+<span class="result">    scan-build: (Dead store deadcode.DeadStores) Value stored to 'fptr1' is never read</span>
+<span class="result">    infer: (HIGH Dead Store) The value written to &fptr1 is never used.</span>
+383     <span class="p">}</span>
+384 <span class="p">}</span>
+<span class="result">    scan-build: (Memory error unix.Malloc) Potential leak of memory pointed to by 'fptr1'</span>
+385 
+386 <span class="cm">/*</span>
+387 <span class="cm"> * Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+388 <span class="cm"> *  Memory allocated and returned from one function and Memory used in another function</span>
+389 <span class="cm"> */</span>
+390 <span class="kt">char</span> <span class="o">*</span> <span class="nf">memory_leak_0015_func_001</span> <span class="p">(</span><span class="kt">int</span> <span class="n">len</span><span class="p">)</span>
+391 <span class="p">{</span>
+392 	<span class="kt">char</span> <span class="o">*</span><span class="n">stringPtr</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">len</span><span class="o">+</span><span class="mi">1</span><span class="p">));</span>
+393 	<span class="k">return</span> <span class="n">stringPtr</span><span class="p">;</span>
+394 <span class="p">}</span>
+395 
+396 <span class="kt">void</span> <span class="nf">memory_leak_0015</span> <span class="p">()</span>
+397 <span class="p">{</span>
+398 	<span class="kt">char</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="s">&quot;This is a string&quot;</span><span class="p">;</span>
+399 	<span class="kt">char</span> <span class="o">*</span><span class="n">str1</span> <span class="o">=</span> <span class="n">memory_leak_0015_func_001</span><span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="n">str</span><span class="p">));</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+<span class="result">    flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+400 	<span class="k">if</span><span class="p">(</span><span class="n">str1</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+401 	<span class="p">{</span>
+402 	    <span class="n">strcpy</span><span class="p">(</span><span class="n">str1</span><span class="p">,</span><span class="n">str</span><span class="p">);</span>
+<span class="result">    flawfinder: ([4]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
+<span class="result">    infer: (HIGH Memory Leak) memory dynamically allocated to `str1` by call to `memory_leak_0015_func_001()` at line 399, column 15 is not reachable after line 402, column 6.</span>
+403 	<span class="p">}</span>
+404 <span class="p">}</span>
+<span class="result">    cppcheck: (error memleak) Memory leak: str1</span>
+<span class="result">    scan-build: (Memory error unix.Malloc) Potential leak of memory pointed to by 'str1'</span>
+405 
+406 <span class="cm">/*</span>
+407 <span class="cm">* Types of defects: Freeing a NULL pointer</span>
+408 <span class="cm"> *  Memory allocated in a function and Memory used in another function</span>
+409 <span class="cm"> */</span>
+410 <span class="cp"># define INDEX &#39;a&#39;</span>
+411 <span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">a</span> <span class="o">=</span><span class="n">INDEX</span><span class="p">;</span>
+412 <span class="kt">char</span> <span class="o">*</span> <span class="n">memory_leak_0016_gbl_ptr</span><span class="p">;</span>
+413 <span class="kt">void</span> <span class="nf">memory_leak_0016_func_001</span> <span class="p">(</span><span class="kt">int</span> <span class="n">len</span><span class="p">)</span>
+414 <span class="p">{</span>
+415 	<span class="n">memory_leak_0016_gbl_ptr</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span>
+416 	<span class="k">if</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">INDEX</span><span class="p">)</span>
+417 		<span class="n">memory_leak_0016_gbl_ptr</span><span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">len</span><span class="o">+</span><span class="mi">1</span><span class="p">));</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+418 <span class="p">}</span>
+419 
+420 <span class="kt">void</span> <span class="nf">memory_leak_0016</span> <span class="p">()</span>
+421 <span class="p">{</span>
+422 	<span class="kt">char</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="s">&quot;This is a string&quot;</span><span class="p">;</span>
+423 	<span class="n">memory_leak_0016_func_001</span><span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="n">str</span><span class="p">));</span>
+<span class="result">    flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+424 	<span class="n">strcpy</span><span class="p">(</span><span class="n">memory_leak_0016_gbl_ptr</span><span class="p">,</span><span class="n">str</span><span class="p">);</span>
+<span class="result">    flawfinder: ([4]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
+<span class="result">    scan-build: (Logic error unix.cstring.NullArg) Null pointer argument in call to string copy function</span>
+<span class="result">    infer: (HIGH Null Dereference) pointer `memory_leak_0016_gbl_ptr` last assigned on line 423 could be null and is dereferenced by call to `strcpy()` at line 424, column 2.</span>
+425 <span class="p">}</span>
+426 
+427 <span class="cm">/*</span>
+428 <span class="cm">* Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+429 <span class="cm">* Complexity: When using a double pointer to long , memory allocated in another function inside goto label and if condition</span>
+430 <span class="cm">*/</span>
+431 <span class="kt">long</span> <span class="o">**</span> <span class="n">memory_leak_0017_gbl_doubleptr</span><span class="p">;</span>
+432 <span class="kt">int</span> <span class="nf">memory_leak_0017_func_001</span><span class="p">(</span><span class="kt">int</span> <span class="n">flag</span><span class="p">)</span>
+433 <span class="p">{</span>
+434    <span class="kt">int</span> <span class="n">ret</span> <span class="p">;</span>
+435    <span class="k">if</span> <span class="p">(</span><span class="n">flag</span> <span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+436 	   <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+437    <span class="k">else</span>
+438 	   <span class="n">ret</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+439    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+440 <span class="p">}</span>
+441 
+442 <span class="kt">void</span> <span class="nf">memory_leak_0017_func_002</span><span class="p">()</span>
+443 <span class="p">{</span>
+444 	<span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">;</span>
+445 	<span class="n">memory_leak_0017_gbl_doubleptr</span><span class="o">=</span><span class="p">(</span><span class="kt">long</span><span class="o">**</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">long</span><span class="o">*</span><span class="p">));</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+446 
+447 	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+448 	<span class="p">{</span>
+449 		<span class="n">memory_leak_0017_gbl_doubleptr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="kt">long</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">long</span><span class="p">));</span>
+<span class="result">    infer: (HIGH Null Dereference) pointer `memory_leak_0017_gbl_doubleptr` last assigned on line 445 could be null and is dereferenced at line 449, column 3.</span>
+450 	<span class="p">}</span>
+451 	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+452 	<span class="p">{</span>
+453 		<span class="k">for</span><span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+454 		<span class="p">{</span>
+455 			<span class="n">memory_leak_0017_gbl_doubleptr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="n">i</span><span class="p">;</span>
+456 		<span class="p">}</span>
+457 	<span class="p">}</span>
+458 <span class="p">}</span>
+459 
+460 <span class="cp">#define ZERO 0</span>
+461 <span class="kt">void</span> <span class="nf">memory_leak_0017</span><span class="p">()</span>
+462 <span class="p">{</span>
+463 	<span class="kt">int</span> <span class="n">flag</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">;</span>
+464 	<span class="n">memory_leak_0017_gbl_doubleptr</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span>
+465 <span class="k">goto</span> <span class="n">label</span><span class="p">;</span>
+466 
+467     <span class="k">if</span><span class="p">(</span><span class="n">memory_leak_0017_func_001</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span><span class="o">==</span><span class="n">ZERO</span><span class="p">)</span>
+468 	<span class="p">{</span>
+469 		<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+470 		<span class="p">{</span>
+471 			<span class="k">for</span><span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+472 			<span class="p">{</span>
+473 				<span class="n">memory_leak_0017_gbl_doubleptr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+474 			<span class="p">}</span>
+475 			<span class="n">free</span> <span class="p">(</span><span class="n">memory_leak_0017_gbl_doubleptr</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+476 			<span class="n">memory_leak_0017_gbl_doubleptr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+477 	   <span class="p">}</span>
+478 
+479 	<span class="p">}</span>
+480 
+481 <span class="nl">label</span><span class="p">:</span>
+482     	<span class="k">if</span><span class="p">(</span><span class="n">memory_leak_0017_func_001</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span><span class="o">==</span><span class="n">ZERO</span><span class="p">)</span>
+483     	<span class="p">{</span>
+484     		<span class="n">memory_leak_0017_func_002</span><span class="p">();</span>
+485     	<span class="p">}</span>
+486 <span class="p">}</span>
+487 
+488 <span class="cm">/*</span>
+489 <span class="cm">* Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+490 <span class="cm">* Complexity: When using a double pointer to char in an infinite while loop</span>
+491 <span class="cm">*/</span>
+492 <span class="cm">/*Allocate Memory */</span>
+493 <span class="kt">char</span> <span class="o">**</span><span class="n">memory_leak_0018dst</span><span class="p">;</span>
+494 <span class="kt">void</span> <span class="nf">memory_leak_0018_func_001</span><span class="p">()</span>
+495 <span class="p">{</span>
+496 	<span class="n">memory_leak_0018dst</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+497 	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+498     <span class="p">{</span>
+499 		<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+500 		<span class="p">{</span>
+501 			<span class="n">memory_leak_0018dst</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">**</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">));</span>
+502 		    <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+503 		    <span class="p">{</span>
+504 		    	<span class="n">memory_leak_0018dst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">15</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Memory Leakage */</span>
+<span class="result">    infer: (HIGH Null Dereference) pointer `memory_leak_0018dst` last assigned on line 501 could be null and is dereferenced at line 504, column 8.</span>
+505 		    <span class="p">}</span>
+506 		    <span class="k">break</span><span class="p">;</span>
+507 		<span class="p">}</span>
+508     <span class="p">}</span>
+509 <span class="p">}</span>
+510 
+511 <span class="kt">void</span> <span class="nf">memory_leak_0018</span> <span class="p">()</span>
+512 <span class="p">{</span>
+513 	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+514     <span class="n">memory_leak_0018_func_001</span><span class="p">();</span>
+515     <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+516     <span class="p">{</span>
+517     	<span class="n">strcpy</span> <span class="p">(</span><span class="n">memory_leak_0018dst</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s">&quot;STRING&quot;</span><span class="p">);</span>
+<span class="result">    flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+518     <span class="p">}</span>
+519 	<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+520 	<span class="p">{</span>
+521 		<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+522 	    <span class="p">{</span>
+523                 <span class="p">;</span>
+524 
+525 	    <span class="p">}</span>
+526 	    <span class="n">free</span><span class="p">(</span><span class="n">memory_leak_0018dst</span><span class="p">);</span>
+527 	    <span class="n">memory_leak_0018dst</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+528 	    <span class="k">break</span><span class="p">;</span>
+529 	<span class="p">}</span>
+530 <span class="p">}</span>
+531 
+532 <span class="cm">/*</span>
+533 <span class="cm">* Types of defects: Memory Leakage - Allocate Memory and not freeing it</span>
+534 <span class="cm">* Complexity:Memory Leakage main function</span>
+535 <span class="cm">*/</span>
+536 <span class="k">extern</span> <span class="k">volatile</span> <span class="kt">int</span> <span class="n">vflag</span><span class="p">;</span>
+537 <span class="kt">void</span> <span class="nf">memory_leak_main</span> <span class="p">()</span>
+538 <span class="p">{</span>
+539 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+540 	<span class="p">{</span>
+541 		<span class="n">memory_leak_001</span><span class="p">();</span>
+542 	<span class="p">}</span>
+543 
+544 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+545 	<span class="p">{</span>
+546 		<span class="n">memory_leak_002</span><span class="p">();</span>
+547 	<span class="p">}</span>
+548 
+549 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+550 	<span class="p">{</span>
+551 		<span class="n">memory_leak_003</span><span class="p">();</span>
+552 	<span class="p">}</span>
+553 
+554 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">4</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+555 	<span class="p">{</span>
+556 		<span class="n">memory_leak_004</span><span class="p">();</span>
+557 	<span class="p">}</span>
+558 
+559 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">5</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+560 	<span class="p">{</span>
+561 		<span class="n">memory_leak_005</span><span class="p">();</span>
+562 	<span class="p">}</span>
+563 
+564 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">6</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+565 	<span class="p">{</span>
+566 		<span class="n">memory_leak_006</span><span class="p">();</span>
+567 	<span class="p">}</span>
+568 
+569 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">7</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+570 	<span class="p">{</span>
+571 		<span class="n">memory_leak_007</span><span class="p">();</span>
+572 	<span class="p">}</span>
+573 
+574 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">8</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+575 	<span class="p">{</span>
+576 		<span class="n">memory_leak_008</span><span class="p">();</span>
+577 	<span class="p">}</span>
+578 
+579 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">9</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+580 	<span class="p">{</span>
+581 		<span class="n">memory_leak_009</span><span class="p">();</span>
+582 	<span class="p">}</span>
+583 
+584 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">10</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+585 	<span class="p">{</span>
+586 		<span class="n">memory_leak_0010</span><span class="p">();</span>
+587 	<span class="p">}</span>
+588 
+589 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">11</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+590 	<span class="p">{</span>
+591 		<span class="n">memory_leak_0011</span><span class="p">();</span>
+592 	<span class="p">}</span>
+593 
+594 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">12</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+595 	<span class="p">{</span>
+596 		<span class="n">memory_leak_0012</span><span class="p">();</span>
+597 	<span class="p">}</span>
+598 
+599 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">13</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+600 	<span class="p">{</span>
+601 		<span class="n">memory_leak_0013</span><span class="p">();</span>
+602 	<span class="p">}</span>
+603 
+604 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">14</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+605 	<span class="p">{</span>
+606 		<span class="n">memory_leak_0014</span><span class="p">();</span>
+607 	<span class="p">}</span>
+608 
+609 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">15</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+610 	<span class="p">{</span>
+611 		<span class="n">memory_leak_0015</span><span class="p">();</span>
+612 	<span class="p">}</span>
+613 
+614 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">16</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+615 	<span class="p">{</span>
+616 		<span class="n">memory_leak_0016</span><span class="p">();</span>
+617 	<span class="p">}</span>
+618 
+619 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">17</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+620 	<span class="p">{</span>
+621 		<span class="n">memory_leak_0017</span><span class="p">();</span>
+622 	<span class="p">}</span>
+623 
+624 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">18</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+625 	<span class="p">{</span>
+626 		<span class="n">memory_leak_0018</span><span class="p">();</span>
+627 	<span class="p">}</span>
+628 <span class="p">}</span>
+629 
+</pre></div>
+</body>
+</html>
