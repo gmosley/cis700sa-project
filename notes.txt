@@ -1,0 +1,16 @@
+(* Programs with security flaws *)
+-buffer_overrun_dynamic
+-buffer_underrun_dynamic (below buffer address)
+-data_overflow
+-data_underflow (both overflow/underflow can be used to create vulnerabilities)
+-dead_lock (can be exploited)
+-invalid_memory_access (access after free)
+-livelock
+-memory_leak
+-null_pointer (deref null pointer)
+-overrun_st (static buffer overrun)
+-race_condition
+-st_cross_thread_access (threads accessing each others' stacks)
+-st_overflow (stack overflow)
+-st_underrun (stack underrun)
+-underrun_st (static buffer underrun)
