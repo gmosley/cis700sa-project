@@ -98,9 +98,8 @@
  21 <span class="p">{</span>
  22 	<span class="kt">int</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
  23 	<span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> cppcheck: (error nullPointer) Null pointer dereference: p
-    --> scan-build: (Logic error core.NullDereference) Dereference of null pointer (loaded from variable 'p')
-    --> infer: (HIGH Null Dereference) pointer `p` last assigned on line 22 could be null and is dereferenced at line 23, column 2.
+    --> cppcheck: error Null pointer dereference: p
+    --> scan-build: Logic error Dereference of null pointer (loaded from variable 'p')
  24 <span class="p">}</span>
  25 
  26 <span class="cm">/*</span>
@@ -112,9 +111,8 @@
  32 	<span class="kt">int</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
  33 	<span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
  34 	<span class="n">ret</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> cppcheck: (error nullPointer) Null pointer dereference: p
-    --> scan-build: (Logic error core.NullDereference) Dereference of null pointer (loaded from variable 'p')
-    --> infer: (HIGH Null Dereference) pointer `p` last assigned on line 32 could be null and is dereferenced at line 34, column 8.
+    --> cppcheck: error Null pointer dereference: p
+    --> scan-build: Logic error Dereference of null pointer (loaded from variable 'p')
  35         <span class="n">sink</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
  36 <span class="p">}</span>
  37 
@@ -128,8 +126,7 @@
  45 	<span class="kt">int</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
  46 	<span class="n">pp</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">p</span><span class="p">;</span>
  47 	<span class="o">**</span><span class="n">pp</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> scan-build: (Logic error core.NullDereference) Dereference of null pointer
-    --> infer: (HIGH Null Dereference) pointer `*pp` last assigned on line 45 could be null and is dereferenced at line 47, column 2.
+    --> scan-build: Logic error Dereference of null pointer
  48 <span class="p">}</span>
  49 
  50 <span class="cm">/*</span>
@@ -146,9 +143,8 @@
  61 <span class="p">{</span>
  62 	<span class="n">null_pointer_004_s_001</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
  63 	<span class="n">p</span><span class="o">-&gt;</span><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> cppcheck: (error nullPointer) Null pointer dereference: p
-    --> scan-build: (Logic error core.NullDereference) Access to field 'a' results in a dereference of a null pointer (loaded from variable 'p')
-    --> infer: (HIGH Null Dereference) pointer `p` last assigned on line 62 could be null and is dereferenced at line 63, column 2.
+    --> cppcheck: error Null pointer dereference: p
+    --> scan-build: Logic error Access to field 'a' results in a dereference of a null pointer (loaded from variable 'p')
  64 <span class="p">}</span>
  65 
  66 <span class="cm">/*</span>
@@ -180,9 +176,8 @@
  92 <span class="p">{</span>
  93 	<span class="n">null_pointer_005_uni_001</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
  94 	<span class="n">p</span><span class="o">-&gt;</span><span class="n">s1</span><span class="p">.</span><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> cppcheck: (error nullPointer) Null pointer dereference: p
-    --> scan-build: (Logic error core.NullDereference) Dereference of null pointer
-    --> infer: (HIGH Null Dereference) pointer `p` last assigned on line 93 could be null and is dereferenced at line 94, column 2.
+    --> cppcheck: error Null pointer dereference: p
+    --> scan-build: Logic error Dereference of null pointer
  95 <span class="p">}</span>
  96 
  97 <span class="cm">/*</span>
@@ -206,8 +201,8 @@
 115 	<span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
 116 	<span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)(</span><span class="kt">intptr_t</span><span class="p">)((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="mi">6</span><span class="p">);</span>
 117 	<span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> cppcheck: (error nullPointer) Null pointer dereference: p
-    --> scan-build: (Logic error core.NullDereference) Dereference of null pointer (loaded from variable 'p')
+    --> cppcheck: error Null pointer dereference: p
+    --> scan-build: Logic error Dereference of null pointer (loaded from variable 'p')
 118 <span class="p">}</span>
 119 
 120 <span class="cm">/*</span>
@@ -224,8 +219,7 @@
 131 	<span class="kt">int</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
 132 	<span class="n">p</span> <span class="o">=</span> <span class="n">null_pointer_008_func_001</span><span class="p">();</span>
 133 	<span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> cppcheck: (error nullPointer) Null pointer dereference: p
-    --> infer: (HIGH Null Dereference) pointer `p` last assigned on line 132 could be null and is dereferenced at line 133, column 2.
+    --> cppcheck: error Null pointer dereference: p
 134 <span class="p">}</span>
 135 
 136 <span class="cm">/*</span>
@@ -235,14 +229,13 @@
 140 <span class="kt">void</span> <span class="nf">null_pointer_009_func_001</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
 141 <span class="p">{</span>
 142 	<span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> cppcheck: (warning nullPointer) Possible null pointer dereference: p
-    --> scan-build: (Logic error core.NullDereference) Dereference of null pointer (loaded from variable 'p')
+    --> cppcheck: warning Possible null pointer dereference: p
+    --> scan-build: Logic error Dereference of null pointer (loaded from variable 'p')
 143 <span class="p">}</span>
 144 
 145 <span class="kt">void</span> <span class="nf">null_pointer_009</span> <span class="p">()</span>
 146 <span class="p">{</span>
 147 	<span class="n">null_pointer_009_func_001</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
-    --> infer: (HIGH Null Dereference) pointer `null` could be null and is dereferenced by call to `null_pointer_009_func_001()` at line 147, column 2.
 148 <span class="p">}</span>
 149 
 150 <span class="cm">/*</span>
@@ -255,9 +248,8 @@
 157 	<span class="kt">int</span> <span class="o">*</span><span class="n">p1</span><span class="p">;</span>
 158 	<span class="n">p1</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
 159 	<span class="o">*</span><span class="n">p1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> cppcheck: (error nullPointer) Null pointer dereference: p1
-    --> scan-build: (Logic error core.NullDereference) Dereference of null pointer (loaded from variable 'p1')
-    --> infer: (HIGH Null Dereference) pointer `p1` last assigned on line 158 could be null and is dereferenced at line 159, column 2.
+    --> cppcheck: error Null pointer dereference: p1
+    --> scan-build: Logic error Dereference of null pointer (loaded from variable 'p1')
 160 <span class="p">}</span>
 161 
 162 <span class="cm">/*</span>
@@ -272,9 +264,8 @@
 171 	<span class="n">p1</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
 172 	<span class="n">p2</span> <span class="o">=</span> <span class="n">p1</span><span class="p">;</span>
 173 	<span class="o">*</span><span class="n">p2</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> cppcheck: (error nullPointer) Null pointer dereference: p2
-    --> scan-build: (Logic error core.NullDereference) Dereference of null pointer (loaded from variable 'p2')
-    --> infer: (HIGH Null Dereference) pointer `p2` last assigned on line 172 could be null and is dereferenced at line 173, column 2.
+    --> cppcheck: error Null pointer dereference: p2
+    --> scan-build: Logic error Dereference of null pointer (loaded from variable 'p2')
 174 <span class="p">}</span>
 175 
 176 
@@ -282,9 +273,8 @@
 178 <span class="p">{</span>
 179 	<span class="kt">int</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
 180 	<span class="n">p</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> cppcheck: (error nullPointer) Null pointer dereference: p
-    --> scan-build: (Logic error core.NullDereference) Array access (from variable 'p') results in a null pointer dereference
-    --> infer: (HIGH Null Dereference) pointer `p` last assigned on line 179 could be null and is dereferenced at line 180, column 2.
+    --> cppcheck: error Null pointer dereference: p
+    --> scan-build: Logic error Array access (from variable 'p') results in a null pointer dereference
 181 <span class="p">}</span>
 182 
 183 <span class="kt">int</span> <span class="o">*</span><span class="nf">null_pointer_013_func_001</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span>
@@ -301,8 +291,7 @@
 194 		<span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 195 	<span class="p">}</span>
 196 	<span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> cppcheck: (warning nullPointer) Possible null pointer dereference: p
-    --> infer: (HIGH Null Dereference) pointer `p` last assigned on line 191 could be null and is dereferenced at line 196, column 2.
+    --> cppcheck: warning Possible null pointer dereference: p
 197 <span class="p">}</span>
 198 
 199 <span class="cm">/*</span>
@@ -320,8 +309,7 @@
 211 	<span class="kt">int</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
 212 	<span class="n">p</span> <span class="o">=</span> <span class="n">null_pointer_014_func_001</span><span class="p">();</span>
 213 	<span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> cppcheck: (error nullPointer) Null pointer dereference: p
-    --> infer: (HIGH Null Dereference) pointer `p` last assigned on line 212 could be null and is dereferenced at line 213, column 2.
+    --> cppcheck: error Null pointer dereference: p
 214 	<span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
 215 	<span class="p">{</span>
 216 		<span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
@@ -346,11 +334,8 @@
 235 <span class="p">{</span>
 236 	<span class="kt">char</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="s">&quot;This is a string&quot;</span><span class="p">;</span>
 237 	<span class="n">null_pointer_015_func_001</span><span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="n">str</span><span class="p">));</span>
-    --> flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).
 238 	<span class="n">strcpy</span><span class="p">(</span><span class="n">null_pointer_015_gbl_ptr</span><span class="p">,</span><span class="n">str</span><span class="p">);</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> flawfinder: ([4]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).
-    --> scan-build: (Logic error unix.cstring.NullArg) Null pointer argument in call to string copy function
-    --> infer: (HIGH Null Dereference) pointer `null_pointer_015_gbl_ptr` last assigned on line 237 could be null and is dereferenced by call to `strcpy()` at line 238, column 2.
+    --> scan-build: Logic error Null pointer argument in call to string copy function
 239 	<span class="n">free</span><span class="p">(</span><span class="n">null_pointer_015_gbl_ptr</span><span class="p">);</span>
 240 	<span class="n">null_pointer_015_gbl_ptr</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
 241 <span class="p">}</span>
@@ -377,7 +362,6 @@
 262 	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
 263 	<span class="p">{</span>
 264 		<span class="n">null_pointer_016_gbl_doubleptr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="kt">long</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">long</span><span class="p">));</span>
-    --> infer: (HIGH Null Dereference) pointer `null_pointer_016_gbl_doubleptr` last assigned on line 260 could be null and is dereferenced at line 264, column 3.
 265 	<span class="p">}</span>
 266 	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
 267 	<span class="p">{</span>
@@ -435,7 +419,6 @@
 319 		    <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
 320 		    <span class="p">{</span>
 321 		    	<span class="n">null_pointer_017dst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">15</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span>
-    --> infer: (HIGH Null Dereference) pointer `null_pointer_017dst` last assigned on line 318 could be null and is dereferenced at line 321, column 8.
 322 		    <span class="p">}</span>
 323 		    <span class="k">break</span><span class="p">;</span>
 324 		<span class="p">}</span>
@@ -449,8 +432,7 @@
 332     <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
 333     <span class="p">{</span>
 334     	<span class="n">strcpy</span> <span class="p">(</span><span class="n">null_pointer_017dst</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s">&quot;STRING&quot;</span><span class="p">);</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:NULL pointer dereference*/</span>
-    --> flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.
-    --> scan-build: (Logic error core.NullDereference) Array access (from variable 'null_pointer_017dst') results in a null pointer dereference
+    --> scan-build: Logic error Array access (from variable 'null_pointer_017dst') results in a null pointer dereference
 335     <span class="p">}</span>
 336 	<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 337 	<span class="p">{</span>

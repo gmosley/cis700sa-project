@@ -6,28 +6,72 @@ import pygments
 from pygments import highlight
 from pygments.lexers import CLexer
 from pygments.formatters import HtmlFormatter
-
-# TODO: don't hard code
-source_input = 'source.c'
-tool_inputs = [('cppcheck', 'cppcheck.plist'),
-               ('scan-build', 'scan-build.plist')]
+import re
+import json
+import pprint
 
 tool_reports = defaultdict(list)
 
-for tool, report_file in tool_inputs:
+
+def parse_plist(tool, report_file):
     with open(report_file, 'rb') as f:
         p = plistlib.load(f, fmt=plistlib.FMT_XML)
-        for d in p['diagnostics']:
-            mesg = '{}: {} {}'.format(
+    for d in p['diagnostics']:
+        mesg = '{}: ({} {}) {}'.format(
+            tool,
+            d['category'],
+            d['check_name'],
+            d['description']
+        )
+        location = d['location']
+        tool_reports[location['line']].append(mesg)
+
+
+def parse_flawfinder(tool, report_file):
+    flawfinder_regex = re.compile(r"([^:]*):(\d+):(\d*): {2}(\[\d\])([^:]*):(.*)")
+    with open(report_file, 'r') as f:
+        for line in f.readlines():
+            line = line.rstrip()
+            m = flawfinder_regex.match(line)
+            filename, lineno, colno, category, check_name, description = m.groups()
+            mesg = '{}: ({} {}) {}'.format(
                 tool,
-                d['category'],
-                d['description']
+                category,
+                check_name,
+                description
             )
-            location = d['location']
-            tool_reports[location['line']].append(mesg)
+            tool_reports[int(lineno)].append(mesg)
+
+
+def parse_infer(tool, report_file):
+    with open(report_file, 'r') as f:
+        results = json.load(f)
+        for result in results:
+            mesg = '{}: ({} {}) {}'.format(
+                tool,
+                result['severity'],
+                result['bug_type_hum'],
+                result['qualifier']
+            )
+            tool_reports[result['line']].append(mesg)
+
+
+# TODO: don't hard code
+source_input = 'source.c'
+tool_inputs = [
+    ('flawfinder', 'flawfinder.txt', parse_flawfinder),
+    ('cppcheck', 'cppcheck.plist', parse_plist),
+    ('scan-build', 'scan-build.plist', parse_plist),
+    ('infer', 'infer.json', parse_infer)
+]
+
+for tool, report_file, parse_function in tool_inputs:
+    parse_function(tool, report_file)
 
 with open(source_input, 'r') as f:
     source_data = f.read()
+
+pprint.pprint(tool_reports)
 
 # use a custom formatter so we have more control
 # right now just using it to guarantee each stylized line directly maps to a source line
