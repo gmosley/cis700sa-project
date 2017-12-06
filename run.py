@@ -9,8 +9,7 @@ import json
 import pprint
 import sys
 import subprocess
-import glob
-import os
+import pathlib
 
 if len(sys.argv) != 2:
     print('usage python3 run.py <source.c>')
@@ -21,26 +20,32 @@ source_input = sys.argv[1]
 # run each tool on the source code
 subprocess.run(['./analyze.sh', source_input])
 
-# add tool outputs if they exist
-tool_outputs = []
 
-if os.path.isfile('results/flawfinder.txt'):
-    tool_outputs.append(('flawfinder', 'results/flawfinder.txt'))
+# add tool results if they exist
+def find_tool_results(folder):
+    tool_results = []
+    results_path = pathlib.Path(folder)
 
-cppcheck_glob = glob.glob('results/cppcheck/*.plist')
-if len(cppcheck_glob) == 1:
-    tool_outputs.append(('cppcheck', cppcheck_glob[0]))
+    flawfinder_file = pathlib.Path(results_path, 'flawfinder.txt')
+    if flawfinder_file.is_file():
+        tool_results.append(('flawfinder', flawfinder_file))
 
-scanbuild_glob = glob.glob('results/scan-build/*/*.plist')
-if len(cppcheck_glob) == 1:
-    tool_outputs.append(('scan-build', scanbuild_glob[0]))
+    for cppcheck_file in results_path.glob('cppcheck/*.plist'):
+        tool_results.append(('cppcheck', cppcheck_file))
 
-if os.path.isfile('results/infer/report.json'):
-    tool_outputs.append(('infer', 'results/infer/report.json'))
+    for scanbuild_file in results_path.glob('scan-build/*/*.plist'):
+        tool_results.append(('scan-build', scanbuild_file))
+
+    infer_file = pathlib.Path(results_path, 'infer/report.json')
+    if infer_file.is_file():
+        tool_results.append(('infer', infer_file))
+
+    return tool_results
 
 
+
+tool_results = find_tool_results('results/')
 tool_reports = defaultdict(list)
-
 
 def parse_plist(tool, report_file):
     with open(report_file, 'rb') as f:
@@ -85,7 +90,7 @@ def parse_infer(tool, report_file):
             tool_reports[result['line']].append(mesg)
 
 
-for tool, report_file in tool_outputs:
+for tool, report_file in tool_results:
     if tool is 'flawfinder':
         parse_flawfinder(tool, report_file)
     elif tool in ['cppcheck', 'scan-build']:
