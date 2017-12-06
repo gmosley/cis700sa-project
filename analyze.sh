@@ -16,27 +16,27 @@ fi
 rm -rf results
 mkdir results
 
-# only output option is text
+echo "running flawfinder"
 flawfinder --quiet --column --dataonly --singleline $SOURCE_FILE > results/flawfinder.txt
 if [ ! $? -eq 0 ]; then
     echo "error running flawfinder"
 fi
 
-# also has the option to output xml
 mkdir results/cppcheck
-cppcheck --plist-output=results/cppcheck $SOURCE_FILE 2> results/cppcheck.txt
+echo "running cppcheck"
+cppcheck --plist-output=results/cppcheck $SOURCE_FILE 2> results/cppcheck.txt > results/cppcheck_log.txt
 if [ ! $? -eq 0 ]; then
     echo "error running cppcheck"
 fi
 
-# need to look more at options for infer
-# using debug flag will report more bugs
-infer run -o results/infer -a checkers --bufferoverrun -- $BUILD_COMMAND 2> results/infer.txt
+echo "running infer"
+infer run -o results/infer -a checkers --bufferoverrun -- $BUILD_COMMAND 2> results/infer.txt > results/infer_log.txt
 if [ ! $? -eq 0 ]; then
     echo "error running infer"
 fi
 
-scan-build -o results/scan-build -plist-html $BUILD_COMMAND 2> results/scan-build.txt
+echo "running scan-build"
+scan-build -o results/scan-build -plist-html $BUILD_COMMAND 2> results/scan-build.txt > results/scan-build_log.txt
 if [ ! $? -eq 0 ]; then
     echo "error running scan-build"
 fi
