@@ -1,5 +1,5 @@
 import plistlib
-from collections import defaultdict
+from collections import defaultdict, Counter
 import pygments
 from pygments import highlight
 from pygments.lexers import CLexer
@@ -15,7 +15,7 @@ if len(sys.argv) != 2:
     print('usage python3 run.py <source.c>')
     exit(1)
 
-source_input = sys.argv[1]
+source_input = pathlib.Path(sys.argv[1])
 
 # run each tool on the source code
 subprocess.run(['./analyze.sh', source_input])
@@ -43,9 +43,10 @@ def find_tool_results(folder):
     return tool_results
 
 
-
 tool_results = find_tool_results('results/')
 tool_reports = defaultdict(list)
+
+bug_counts = defaultdict(Counter)
 
 def parse_plist(tool, report_file):
     with open(report_file, 'rb') as f:
@@ -58,11 +59,12 @@ def parse_plist(tool, report_file):
             d['description']
         )
         location = d['location']
+        bug_counts[tool][d['check_name']] += 1
         tool_reports[location['line']].append(mesg)
 
 
 def parse_flawfinder(tool, report_file):
-    flawfinder_regex = re.compile(r"([^:]*):(\d+):(\d*): {2}(\[\d\])([^:]*):(.*)")
+    flawfinder_regex = re.compile(r"([^:]*):(\d+):(\d*): {2}(\[\d\]) ([^:]*):(.*)")
     with open(report_file, 'r') as f:
         for line in f.readlines():
             line = line.rstrip()
@@ -74,6 +76,7 @@ def parse_flawfinder(tool, report_file):
                 check_name,
                 description
             )
+            bug_counts[tool][check_name] += 1
             tool_reports[int(lineno)].append(mesg)
 
 
@@ -87,6 +90,7 @@ def parse_infer(tool, report_file):
                 result['bug_type_hum'],
                 result['qualifier']
             )
+            bug_counts[tool][result['bug_type_hum']] += 1
             tool_reports[result['line']].append(mesg)
 
 
@@ -104,8 +108,6 @@ for tool, report_file in tool_results:
 with open(source_input, 'r') as f:
     source_data = f.read()
 
-pprint.pprint(tool_reports)
-
 # use a custom formatter so we have more control
 # right now just using it to guarantee each stylized line directly maps to a source line
 class CodeHtmlFormatter(HtmlFormatter):
@@ -117,11 +119,26 @@ class CodeHtmlFormatter(HtmlFormatter):
             yield i, t
 
 
-with open('combined-report.html', 'w') as f:
+html_file = source_input.name[:source_input.name.rfind('.')] + '.html'
+with open(html_file, 'w') as f:
     f.write('<!DOCTYPE html>\n<html>\n<head>\n<style>\n')
     f.write(HtmlFormatter().get_style_defs('.highlight'))
-    f.write('\n.result { color: #F03434 }\n')
+    f.write('\n')
+    f.write('.result { color: #F03434 }\n')
+    f.write('.count { text-align: right }\n')
+    f.write('.bug_counts { font-family: monospace; }\n')
+    f.write('table { border-collapse: collapse; border-spacing: 0px; margin-bottom: 10px; }\n')
+    f.write('table, th, td { padding: 5px; border: 1px solid black; }\n')
     f.write('</style>\n</head>\n<body>\n')
+
+    f.write('<div class="bug_counts">\n')
+    for tool, counts in bug_counts.items():
+        f.write('<table style="display: inline-table;">\n')
+        f.write('<tr><th colspan="2">{}</th></tr>'.format(tool))
+        for bug, count in counts.items():
+            f.write('<tr><td>{}</td><td class="count">{}</td></tr>'.format(bug, count))
+        f.write('</table>\n')
+    f.write('</div>\n')
 
     # needed for syntax highlighting
     f.write('<div class="highlight"><pre>\n')
@@ -132,7 +149,7 @@ with open('combined-report.html', 'w') as f:
 
         if lineno in tool_reports:
             for special_line in tool_reports[lineno]:
-                f.write('<span class=\"result\">    > {}</span>\n'.format(special_line))
+                f.write('<span class="result">    > {}</span>\n'.format(special_line))
 
     # close syntax highlighting
     f.write('</pre></div>\n')
