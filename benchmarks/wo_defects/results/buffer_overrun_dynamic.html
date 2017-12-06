@@ -72,9 +72,19 @@
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
 .result { color: #F03434 }
+.count { text-align: right }
+.bug_counts { font-family: monospace; }
+table { border-collapse: collapse; border-spacing: 0px; margin-bottom: 10px; }
+table, th, td { padding: 5px; border: 1px solid black; }
 </style>
 </head>
 <body>
+<div class="bug_counts">
+<table style="display: inline-table;">
+<tr><th colspan="2">flawfinder</th></tr><tr><td>(buffer) char</td><td class="count">2</td></tr><tr><td>(buffer) memcpy</td><td class="count">1</td></tr></table>
+<table style="display: inline-table;">
+<tr><th colspan="2">infer</th></tr><tr><td>Null Dereference</td><td class="count">2</td></tr></table>
+</div>
 <div class="highlight"><pre>
   1 <span class="cm">/********Software Analysis - FY2013*************/</span>
   2 <span class="cm">/*</span>
@@ -650,7 +660,7 @@
 570 	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
 571 	<span class="kt">char</span><span class="o">*</span> <span class="n">ptr1</span><span class="o">=</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span>
 572 	<span class="kt">char</span> <span class="n">a</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span><span class="o">*</span><span class="n">ptr2</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 573 
 574 	<span class="k">if</span><span class="p">(</span><span class="n">ptr1</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
 575 	<span class="p">{</span>
@@ -660,7 +670,7 @@
 579 	    <span class="p">}</span>
 580     	<span class="n">ptr1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="sc">&#39;\0&#39;</span><span class="p">;</span>
 581 	    <span class="n">memcpy</span><span class="p">(</span><span class="n">ptr2</span><span class="p">,</span><span class="n">ptr1</span><span class="p">,</span><span class="mi">11</span><span class="p">);</span>
-<span class="result">    > flawfinder: ([2]  (buffer) memcpy) Does not check for buffer overflows when copying to destination (CWE-120).  Make sure destination can always hold the source data.</span>
+<span class="result">    > flawfinder: ([2] (buffer) memcpy) Does not check for buffer overflows when copying to destination (CWE-120).  Make sure destination can always hold the source data.</span>
 582 	    <span class="n">free</span><span class="p">(</span><span class="n">ptr1</span><span class="p">);</span>
 583 	<span class="p">}</span>
 584 <span class="p">}</span>
@@ -673,7 +683,7 @@
 591 <span class="k">typedef</span> <span class="k">struct</span>
 592 <span class="p">{</span>
 593 	<span class="kt">char</span> <span class="n">arr</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 594 	<span class="kt">int</span> <span class="n">arri</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
 595 <span class="p">}</span><span class="n">dynamic_buffer_overrun_s_005</span><span class="p">;</span>
 596 

@@ -72,9 +72,21 @@
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
 .result { color: #F03434 }
+.count { text-align: right }
+.bug_counts { font-family: monospace; }
+table { border-collapse: collapse; border-spacing: 0px; margin-bottom: 10px; }
+table, th, td { padding: 5px; border: 1px solid black; }
 </style>
 </head>
 <body>
+<div class="bug_counts">
+<table style="display: inline-table;">
+<tr><th colspan="2">flawfinder</th></tr><tr><td>(buffer) strcpy</td><td class="count">2</td></tr><tr><td>(buffer) strlen</td><td class="count">1</td></tr></table>
+<table style="display: inline-table;">
+<tr><th colspan="2">scan-build</th></tr><tr><td>unix.cstring.NullArg</td><td class="count">1</td></tr></table>
+<table style="display: inline-table;">
+<tr><th colspan="2">infer</th></tr><tr><td>Null Dereference</td><td class="count">3</td></tr></table>
+</div>
 <div class="highlight"><pre>
   1 <span class="cm">/********Software Analysis - FY2013*************/</span>
   2 <span class="cm">/*</span>
@@ -333,9 +345,9 @@
 255 <span class="p">{</span>
 256 	<span class="kt">char</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="s">&quot;This is a string&quot;</span><span class="p">;</span>
 257 	<span class="n">null_pointer_015_func_001</span><span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="n">str</span><span class="p">));</span>
-<span class="result">    > flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+<span class="result">    > flawfinder: ([1] (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
 258 	<span class="n">strcpy</span><span class="p">(</span><span class="n">null_pointer_015_gbl_ptr</span><span class="p">,</span><span class="n">str</span><span class="p">);</span>  <span class="cm">/*Tool should not detect this line as error*/</span> <span class="cm">/*NO ERROR:NULL pointer dereference*/</span>
-<span class="result">    > flawfinder: ([4]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
+<span class="result">    > flawfinder: ([4] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
 <span class="result">    > scan-build: (Logic error unix.cstring.NullArg) Null pointer argument in call to string copy function</span>
 <span class="result">    > infer: (HIGH Null Dereference) pointer `null_pointer_015_gbl_ptr` last assigned on line 257 could be null and is dereferenced by call to `strcpy()` at line 258, column 2.</span>
 259 	<span class="n">free</span><span class="p">(</span><span class="n">null_pointer_015_gbl_ptr</span><span class="p">);</span>
@@ -435,7 +447,7 @@
 351     <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
 352     <span class="p">{</span>
 353     	<span class="n">strcpy</span> <span class="p">(</span><span class="n">null_pointer_017dst</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s">&quot;STRING&quot;</span><span class="p">);</span> <span class="cm">/*Tool should not detect this line as error*/</span> <span class="cm">/*NO ERROR:NULL pointer dereference*/</span>
-<span class="result">    > flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+<span class="result">    > flawfinder: ([2] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
 354     <span class="p">}</span>
 355 	<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 356 	<span class="p">{</span>

@@ -72,9 +72,23 @@
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
 .result { color: #F03434 }
+.count { text-align: right }
+.bug_counts { font-family: monospace; }
+table { border-collapse: collapse; border-spacing: 0px; margin-bottom: 10px; }
+table, th, td { padding: 5px; border: 1px solid black; }
 </style>
 </head>
 <body>
+<div class="bug_counts">
+<table style="display: inline-table;">
+<tr><th colspan="2">flawfinder</th></tr><tr><td>(buffer) strcpy</td><td class="count">6</td></tr><tr><td>(buffer) char</td><td class="count">33</td></tr><tr><td>(buffer) strlen</td><td class="count">6</td></tr></table>
+<table style="display: inline-table;">
+<tr><th colspan="2">cppcheck</th></tr><tr><td>bufferAccessOutOfBounds</td><td class="count">1</td></tr></table>
+<table style="display: inline-table;">
+<tr><th colspan="2">scan-build</th></tr><tr><td>deadcode.DeadStores</td><td class="count">3</td></tr><tr><td></td><td class="count">1</td></tr></table>
+<table style="display: inline-table;">
+<tr><th colspan="2">infer</th></tr><tr><td>Dead Store</td><td class="count">2</td></tr></table>
+</div>
 <div class="highlight"><pre>
   1 <span class="cm">/********Software Analysis - FY2013*************/</span>
   2 <span class="cm">/*</span>
@@ -98,11 +112,11 @@
  20 <span class="kt">void</span> <span class="nf">st_underrun_001</span> <span class="p">()</span>
  21 <span class="p">{</span>
  22 	 <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
  23 	 <span class="n">strcpy</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s">&quot;my string&quot;</span><span class="p">);</span>
-<span class="result">    > flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+<span class="result">    > flawfinder: ([2] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
  24 	 <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-<span class="result">    > flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+<span class="result">    > flawfinder: ([1] (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
  25 	 <span class="k">while</span> <span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;Z&#39;</span><span class="p">)</span>
  26 	 <span class="p">{</span>
  27 		 <span class="n">len</span><span class="o">--</span><span class="p">;</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/* Stack Under RUN error */</span>
@@ -117,26 +131,26 @@
  36 <span class="cm"> */</span>
  37 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
  38 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
  39 	<span class="kt">char</span> <span class="n">buf1</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
  40 	<span class="kt">char</span> <span class="n">buf2</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
  41 	<span class="kt">char</span> <span class="n">buf3</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
  42 	<span class="kt">char</span> <span class="n">buf4</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
  43 	<span class="kt">char</span> <span class="n">buf5</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
  44 	<span class="kt">char</span> <span class="n">buf6</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
  45 <span class="p">}</span> <span class="n">st_underrun_002_s_001</span><span class="p">;</span>
  46 
  47 <span class="kt">void</span> <span class="nf">st_underrun_002_func_001</span> <span class="p">(</span><span class="n">st_underrun_002_s_001</span> <span class="n">s</span><span class="p">)</span>
  48 <span class="p">{</span>
  49 
  50 	 <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-<span class="result">    > flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+<span class="result">    > flawfinder: ([1] (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
  51 	 <span class="k">for</span> <span class="p">(;</span><span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;Z&#39;</span><span class="p">;</span><span class="n">len</span><span class="o">--</span><span class="p">)</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/* Stack Under RUN error */</span>
  52 	 <span class="p">{</span>
  53 		 <span class="cm">/* if (s.buf[len] == &#39;\0&#39;)</span>
@@ -148,7 +162,7 @@
  59 <span class="p">{</span>
  60 	<span class="n">st_underrun_002_s_001</span> <span class="n">s</span><span class="p">;</span>
  61 	<span class="n">strcpy</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">,</span><span class="s">&quot;STRING&quot;</span><span class="p">);</span>
-<span class="result">    > flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+<span class="result">    > flawfinder: ([2] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
  62 	<span class="n">st_underrun_002_func_001</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
  63 <span class="p">}</span>
  64 
@@ -158,29 +172,29 @@
  68 <span class="cm"> */</span>
  69 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
  70 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
  71 	<span class="kt">char</span> <span class="n">buf1</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
  72 	<span class="kt">char</span> <span class="n">buf2</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
  73 	<span class="kt">char</span> <span class="n">buf3</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
  74 	<span class="kt">char</span> <span class="n">buf4</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
  75 <span class="p">}</span> <span class="n">st_underrun_003_s_001</span><span class="p">;</span>
  76 
  77 <span class="kt">void</span> <span class="nf">st_underrun_003_func_001</span> <span class="p">(</span><span class="n">st_underrun_003_s_001</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span>
  78 <span class="p">{</span>
  79 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;STRING&quot;</span><span class="p">;</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
  80 	<span class="n">strcpy</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">,</span><span class="n">buf</span><span class="p">);</span>
-<span class="result">    > flawfinder: ([4]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
+<span class="result">    > flawfinder: ([4] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
  81 <span class="p">}</span>
  82 
  83 <span class="kt">void</span> <span class="nf">st_underrun_003_func_002</span> <span class="p">(</span><span class="n">st_underrun_003_s_001</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span>
  84 <span class="p">{</span>
  85 	 <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-<span class="result">    > flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+<span class="result">    > flawfinder: ([1] (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
  86 	 <span class="k">do</span>
  87 	 <span class="p">{</span>
  88 		 <span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;A&#39;</span><span class="p">;</span>
@@ -203,19 +217,19 @@
 105 <span class="cm"> */</span>
 106 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
 107 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 108 	<span class="kt">char</span> <span class="n">buf1</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 109 	<span class="kt">char</span> <span class="n">buf2</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 110 <span class="p">}</span> <span class="n">st_underrun_004_s_001</span><span class="p">;</span>
 111 
 112 <span class="kt">void</span> <span class="nf">st_underrun_004_func_002</span> <span class="p">(</span><span class="n">st_underrun_004_s_001</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span>
 113 <span class="p">{</span>
 114 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;STRING&quot;</span><span class="p">;</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 115 	<span class="n">strcpy</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">,</span><span class="n">buf</span><span class="p">);</span>
-<span class="result">    > flawfinder: ([4]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
+<span class="result">    > flawfinder: ([4] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
 116 <span class="p">}</span>
 117 
 118 <span class="n">st_underrun_004_s_001</span> <span class="nf">st_underrun_004_func_001</span> <span class="p">(</span><span class="n">st_underrun_004_s_001</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span>
@@ -223,7 +237,7 @@
 120 	<span class="n">st_underrun_004_s_001</span> <span class="n">s1</span><span class="p">;</span>
 121 	<span class="n">st_underrun_004_func_002</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
 122 	<span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-<span class="result">    > flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+<span class="result">    > flawfinder: ([1] (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
 123 	 <span class="k">do</span>
 124 	 <span class="p">{</span>
 125 		 <span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;B&#39;</span><span class="p">;</span>
@@ -248,7 +262,7 @@
 143 <span class="cm"> */</span>
 144 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
 145 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 146 <span class="p">}</span> <span class="n">st_underrun_005_s_001</span><span class="p">;</span>
 147 
 148 <span class="kt">void</span> <span class="nf">st_underrun_005_func_001</span> <span class="p">(</span><span class="n">st_underrun_005_s_001</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cnt</span><span class="p">)</span>
@@ -271,10 +285,10 @@
 165 <span class="kt">void</span> <span class="nf">st_underrun_005</span> <span class="p">()</span>
 166 <span class="p">{</span>
 167 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 168 	<span class="n">st_underrun_005_s_001</span> <span class="n">s</span><span class="p">;</span>
 169 	<span class="n">strcpy</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">,</span><span class="s">&quot;STRING !&quot;</span><span class="p">);</span>
-<span class="result">    > flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+<span class="result">    > flawfinder: ([2] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
 170 	<span class="n">st_underrun_005_func_001</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="mi">8</span><span class="p">);</span>
 171 	<span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
 172 <span class="p">}</span>
@@ -285,26 +299,26 @@
 177 <span class="cm"> */</span>
 178 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
 179 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 180 	<span class="kt">char</span> <span class="n">buf1</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 181 	<span class="kt">char</span> <span class="n">buf2</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 182 	<span class="kt">char</span> <span class="n">buf3</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 183 	<span class="kt">char</span> <span class="n">buf4</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 184 	<span class="kt">char</span> <span class="n">buf5</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 185 	<span class="kt">char</span> <span class="n">buf6</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 186 <span class="p">}</span> <span class="n">st_underrun_006_s_001</span><span class="p">;</span>
 187 
 188 <span class="kt">void</span> <span class="nf">st_underrun_006_func_001</span> <span class="p">(</span><span class="n">st_underrun_006_s_001</span> <span class="n">s</span><span class="p">)</span>
 189 <span class="p">{</span>
 190 
 191 	 <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-<span class="result">    > flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+<span class="result">    > flawfinder: ([1] (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
 192 	 <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
 193 	 <span class="k">for</span> <span class="p">(;</span><span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;Z&#39;</span><span class="p">;</span><span class="n">len</span><span class="o">--</span><span class="p">)</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/* Error: Stack Under RUN error */</span>
 194 	 <span class="p">{</span>
@@ -320,7 +334,7 @@
 202 <span class="p">{</span>
 203 	<span class="n">st_underrun_006_s_001</span> <span class="n">s</span><span class="p">;</span>
 204 	<span class="n">strcpy</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">,</span><span class="s">&quot;STRING !!!!&quot;</span><span class="p">);</span>
-<span class="result">    > flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+<span class="result">    > flawfinder: ([2] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
 <span class="result">    > cppcheck: (error bufferAccessOutOfBounds) Buffer is accessed out of bounds: s.buf</span>
 <span class="result">    > scan-build: (Logic error ) String copy function overflows destination buffer</span>
 205 	<span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">func</span><span class="p">)(</span><span class="n">st_underrun_006_s_001</span><span class="p">);</span>
@@ -334,23 +348,23 @@
 213 <span class="cm"> */</span>
 214 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
 215 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 216 	<span class="kt">char</span> <span class="n">buf1</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 217 	<span class="kt">char</span> <span class="n">buf2</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 218 	<span class="kt">char</span> <span class="n">buf3</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 219 	<span class="kt">char</span> <span class="n">buf4</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 220 	<span class="kt">char</span> <span class="n">buf5</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 221 <span class="p">}</span> <span class="n">st_underrun_007_s_001</span><span class="p">;</span>
 222 
 223 <span class="kt">void</span> <span class="nf">st_underrun_007_func_001</span> <span class="p">(</span><span class="n">st_underrun_007_s_001</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span>
 224 <span class="p">{</span>
 225 	 <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-<span class="result">    > flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+<span class="result">    > flawfinder: ([1] (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
 226 	 <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
 227 	 <span class="k">for</span> <span class="p">(;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;Z&#39;</span><span class="p">;</span><span class="n">len</span><span class="o">--</span><span class="p">)</span>
 228 	 <span class="p">{</span>

@@ -72,9 +72,21 @@
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
 .result { color: #F03434 }
+.count { text-align: right }
+.bug_counts { font-family: monospace; }
+table { border-collapse: collapse; border-spacing: 0px; margin-bottom: 10px; }
+table, th, td { padding: 5px; border: 1px solid black; }
 </style>
 </head>
 <body>
+<div class="bug_counts">
+<table style="display: inline-table;">
+<tr><th colspan="2">flawfinder</th></tr><tr><td>(buffer) memcpy</td><td class="count">1</td></tr></table>
+<table style="display: inline-table;">
+<tr><th colspan="2">scan-build</th></tr><tr><td>deadcode.DeadStores</td><td class="count">2</td></tr></table>
+<table style="display: inline-table;">
+<tr><th colspan="2">infer</th></tr><tr><td>Null Dereference</td><td class="count">1</td></tr><tr><td>Dead Store</td><td class="count">2</td></tr></table>
+</div>
 <div class="highlight"><pre>
   1 <span class="cm">/********Software Analysis - FY2013*************/</span>
   2 <span class="cm">/*</span>
@@ -167,7 +179,7 @@
  89 	<span class="p">{</span>
  90 		<span class="kt">int</span><span class="o">*</span> <span class="n">ptr</span><span class="o">=</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
  91 	    <span class="n">memcpy</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span><span class="s">&quot;This is test&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-<span class="result">    > flawfinder: ([2]  (buffer) memcpy) Does not check for buffer overflows when copying to destination (CWE-120).  Make sure destination can always hold the source data.</span>
+<span class="result">    > flawfinder: ([2] (buffer) memcpy) Does not check for buffer overflows when copying to destination (CWE-120).  Make sure destination can always hold the source data.</span>
 <span class="result">    > infer: (HIGH Null Dereference) pointer `ptr` last assigned on line 90 could be null and is dereferenced by call to `memcpy()` at line 91, column 6.</span>
  92         <span class="n">free</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
  93         <span class="n">instance1</span><span class="o">++</span> <span class="p">;</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Race condition*/</span>

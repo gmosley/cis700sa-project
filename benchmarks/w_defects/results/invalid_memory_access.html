@@ -72,9 +72,23 @@
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
 .result { color: #F03434 }
+.count { text-align: right }
+.bug_counts { font-family: monospace; }
+table { border-collapse: collapse; border-spacing: 0px; margin-bottom: 10px; }
+table, th, td { padding: 5px; border: 1px solid black; }
 </style>
 </head>
 <body>
+<div class="bug_counts">
+<table style="display: inline-table;">
+<tr><th colspan="2">flawfinder</th></tr><tr><td>(buffer) strcpy</td><td class="count">7</td></tr><tr><td>(buffer) memcpy</td><td class="count">1</td></tr><tr><td>(buffer) char</td><td class="count">2</td></tr><tr><td>(buffer) strlen</td><td class="count">1</td></tr></table>
+<table style="display: inline-table;">
+<tr><th colspan="2">cppcheck</th></tr><tr><td>deallocuse</td><td class="count">4</td></tr><tr><td>memleak</td><td class="count">1</td></tr><tr><td>deallocret</td><td class="count">1</td></tr><tr><td>uninitvar</td><td class="count">2</td></tr></table>
+<table style="display: inline-table;">
+<tr><th colspan="2">scan-build</th></tr><tr><td>deadcode.DeadStores</td><td class="count">5</td></tr><tr><td>core.NullDereference</td><td class="count">6</td></tr><tr><td>unix.Malloc</td><td class="count">9</td></tr></table>
+<table style="display: inline-table;">
+<tr><th colspan="2">infer</th></tr><tr><td>Dead Store</td><td class="count">9</td></tr><tr><td>Use After Free</td><td class="count">7</td></tr><tr><td>Null Dereference</td><td class="count">5</td></tr></table>
+</div>
 <div class="highlight"><pre>
   1 <span class="cm">/********Software Analysis - FY2013*************/</span>
   2 <span class="cm">/*</span>
@@ -188,7 +202,7 @@
 100 		<span class="k">if</span><span class="p">(</span><span class="n">buf</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
 101 		<span class="p">{</span>
 102 		<span class="n">strcpy</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="s">&quot;This is String&quot;</span><span class="p">);</span>
-<span class="result">    > flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+<span class="result">    > flawfinder: ([2] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
 103 	    <span class="n">free</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
 104 		<span class="p">}</span>
 105 	    <span class="n">c</span> <span class="o">=</span> <span class="n">buf</span><span class="p">;</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Invalid memory access to already freed area*/</span>
@@ -299,13 +313,13 @@
 203 	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
 204 	<span class="p">{</span>
 205 		<span class="n">strcpy</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">ptr</span><span class="o">+</span><span class="n">i</span><span class="p">),</span><span class="s">&quot;String&quot;</span><span class="p">);</span>
-<span class="result">    > flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+<span class="result">    > flawfinder: ([2] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
 206 	    <span class="n">free</span><span class="p">(</span><span class="n">ptr</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
 207 	    <span class="n">ptr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
 208 	<span class="p">}</span>
 209 	<span class="n">free</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
 210 	<span class="n">strcpy</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">ptr</span><span class="o">+</span><span class="mi">2</span><span class="p">),</span><span class="s">&quot;String&quot;</span><span class="p">);</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Invalid memory access to already freed area*/</span>
-<span class="result">    > flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+<span class="result">    > flawfinder: ([2] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
 211 <span class="p">}</span>
 212 
 213 <span class="cm">/*</span>
@@ -320,7 +334,7 @@
 222 	<span class="p">{</span>
 223 	<span class="n">free</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
 224 	<span class="n">memcpy</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="n">buf1</span><span class="p">,</span><span class="mi">11</span><span class="p">);</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Invalid memory access to already freed area*/</span>
-<span class="result">    > flawfinder: ([2]  (buffer) memcpy) Does not check for buffer overflows when copying to destination (CWE-120).  Make sure destination can always hold the source data.</span>
+<span class="result">    > flawfinder: ([2] (buffer) memcpy) Does not check for buffer overflows when copying to destination (CWE-120).  Make sure destination can always hold the source data.</span>
 <span class="result">    > cppcheck: (error deallocuse) Dereferencing 'buf' after it is deallocated / released</span>
 <span class="result">    > scan-build: (Memory error unix.Malloc) Use of memory after it is freed</span>
 <span class="result">    > infer: (HIGH Use After Free) pointer `buf` last assigned on line 219 was freed by call to `free()` at line 223, column 2 and is dereferenced or freed at line 224, column 2.</span>
@@ -625,7 +639,7 @@
 503     <span class="k">if</span> <span class="p">(</span><span class="n">str1</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
 504     <span class="p">{</span>
 505         <span class="n">i</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">str1</span><span class="p">);</span>
-<span class="result">    > flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+<span class="result">    > flawfinder: ([1] (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
 506         <span class="n">str_rev</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
 507         <span class="k">if</span> <span class="p">(</span><span class="n">str_rev</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
 508         <span class="p">{</span>
@@ -686,7 +700,7 @@
 559     		<span class="n">invalid_memory_access_016_doubleptr_gbl</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span>
 <span class="result">    > infer: (HIGH Null Dereference) pointer `invalid_memory_access_016_doubleptr_gbl` last assigned on line 556 could be null and is dereferenced at line 559, column 7.</span>
 560     		   <span class="n">strcpy</span><span class="p">(</span><span class="n">invalid_memory_access_016_doubleptr_gbl</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s">&quot;STRING00&quot;</span><span class="p">);</span>
-<span class="result">    > flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+<span class="result">    > flawfinder: ([2] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
 <span class="result">    > infer: (HIGH Null Dereference) pointer `*invalid_memory_access_016_doubleptr_gbl[i]` last assigned on line 559 could be null and is dereferenced by call to `strcpy()` at line 560, column 10.</span>
 561 	    <span class="p">}</span>
 562 	<span class="p">}</span>
@@ -695,9 +709,9 @@
 565 <span class="kt">void</span> <span class="nf">invalid_memory_access_016_func_003</span><span class="p">()</span>
 566 <span class="p">{</span>
 567 	<span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="p">;</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 568 	<span class="n">strcpy</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">invalid_memory_access_016_doubleptr_gbl</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Invalid memory access to already freed area*/</span>
-<span class="result">    > flawfinder: ([4]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
+<span class="result">    > flawfinder: ([4] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
 <span class="result">    > scan-build: (Logic error core.NullDereference) Array access (from variable 'invalid_memory_access_016_doubleptr_gbl') results in a null pointer dereference</span>
 569 <span class="p">}</span>
 570 
@@ -742,7 +756,7 @@
 609 	<span class="n">invalid_memory_access_017_doubleptr_gbl</span><span class="o">=</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span>
 610 	<span class="k">if</span><span class="p">(</span><span class="n">invalid_memory_access_017_doubleptr_gbl</span> <span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
 611 	<span class="n">strcpy</span><span class="p">(</span><span class="n">invalid_memory_access_017_doubleptr_gbl</span><span class="p">,</span><span class="s">&quot;TEST&quot;</span><span class="p">);</span>
-<span class="result">    > flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+<span class="result">    > flawfinder: ([2] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
 612 <span class="p">}</span>
 613 
 614 <span class="kt">void</span> <span class="nf">invalid_memory_access_017_func_003</span><span class="p">()</span>
@@ -753,9 +767,9 @@
 619 <span class="kt">void</span> <span class="nf">invalid_memory_access_017_func_004</span><span class="p">()</span>
 620 <span class="p">{</span>
 621 	<span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="p">;</span>
-<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+<span class="result">    > flawfinder: ([2] (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
 622 	<span class="n">strcpy</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">invalid_memory_access_017_doubleptr_gbl</span><span class="p">);</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Invalid memory access to already freed area*/</span>
-<span class="result">    > flawfinder: ([4]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
+<span class="result">    > flawfinder: ([4] (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
 <span class="result">    > scan-build: (Memory error unix.Malloc) Use of memory after it is freed</span>
 623 <span class="p">}</span>
 624 
