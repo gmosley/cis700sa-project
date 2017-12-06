@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #f8f8f8; }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #888888 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
+.result { color: #F03434 }
+</style>
+</head>
+<body>
+<div class="highlight"><pre>
+  1 <span class="cm">/********Software Analysis - FY2013*************/</span>
+  2 <span class="cm">/*</span>
+  3 <span class="cm">* File Name: dead_lock.c</span>
+  4 <span class="cm">* Defect Classification</span>
+  5 <span class="cm">* ---------------------</span>
+  6 <span class="cm">* Defect Type: Concurrency defects</span>
+  7 <span class="cm">* Defect Sub-type: Dead lock</span>
+  8 <span class="cm">*</span>
+  9 <span class="cm">*/</span>
+ 10 
+ 11 <span class="cp">#include</span> <span class="cpf">&quot;HeaderFile.h&quot;</span><span class="cp"></span>
+ 12 
+ 13 <span class="cp">#if defined(CHECKER_POLYSPACE)</span>
+ 14 <span class="kt">int</span> <span class="nf">rand</span> <span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+ 15 <span class="cp">#endif </span><span class="cm">/* defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+ 16 
+ 17 <span class="cm">/*</span>
+ 18 <span class="cm"> * Types of defects: deadlock</span>
+ 19 <span class="cm"> * Complexity: exclusive control of two resources task 1: A -&gt; B, task 2: B -&gt; A</span>
+ 20 <span class="cm"> */</span>
+ 21 <span class="n">pthread_mutex_t</span> <span class="n">dead_lock_001_glb_mutexA</span> <span class="o">=</span> <span class="n">PTHREAD_MUTEX_INITIALIZER</span><span class="p">;</span>
+ 22 <span class="n">pthread_mutex_t</span> <span class="n">dead_lock_001_glb_mutexB</span> <span class="o">=</span> <span class="n">PTHREAD_MUTEX_INITIALIZER</span><span class="p">;</span>
+ 23 <span class="cp">#if defined(CHECKER_POLYSPACE)</span>
+ 24 <span class="kt">void</span> <span class="nf">dead_lock_001_glb_mutexA_lock</span> <span class="p">()</span> <span class="p">{}</span>
+ 25 <span class="kt">void</span> <span class="nf">dead_lock_001_glb_mutexA_unlock</span> <span class="p">()</span> <span class="p">{}</span>
+ 26 <span class="kt">void</span> <span class="nf">dead_lock_001_glb_mutexB_lock</span> <span class="p">()</span> <span class="p">{}</span>
+ 27 <span class="kt">void</span> <span class="nf">dead_lock_001_glb_mutexB_unlock</span> <span class="p">()</span> <span class="p">{}</span>
+ 28 <span class="cp">#endif </span><span class="cm">/* #if defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+ 29 
+ 30 <span class="kt">int</span> <span class="n">dead_lock_001_glb_dataA</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+ 31 <span class="kt">int</span> <span class="n">dead_lock_001_glb_dataB</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+ 32 
+ 33 <span class="kt">void</span><span class="o">*</span> <span class="nf">dead_lock_001_tsk_001</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">pram</span><span class="p">)</span>
+ 34 <span class="p">{</span>
+ 35 	<span class="cm">/* lock A */</span>
+ 36 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+ 37 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_001_glb_mutexA</span><span class="p">);</span>
+ 38 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+ 39 	<span class="n">dead_lock_001_glb_dataA</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_001_glb_dataA</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span><span class="p">;</span>
+ 40     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Task1! dead_lock= %d </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">dead_lock_001_glb_dataA</span><span class="p">);</span>
+ 41 
+ 42 	<span class="cm">/* lock B */</span>
+ 43 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+ 44 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_001_glb_mutexB</span><span class="p">);</span>
+ 45 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+ 46 	<span class="n">dead_lock_001_glb_dataB</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_001_glb_dataB</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">20</span><span class="p">;</span>
+ 47 
+ 48 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+ 49 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_001_glb_mutexB</span><span class="p">);</span>
+ 50 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+ 51 
+ 52 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+ 53 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_001_glb_mutexA</span><span class="p">);</span>
+ 54 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+ 55 	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+ 56 <span class="p">}</span>
+ 57 
+ 58 <span class="kt">void</span><span class="o">*</span> <span class="nf">dead_lock_001_tsk_002</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">pram</span><span class="p">)</span>
+ 59 <span class="p">{</span>
+ 60 	<span class="cm">/* lock B */</span>
+ 61 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+ 62 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_001_glb_mutexB</span><span class="p">);</span>  <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Dead Lock*/</span>
+ 63 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+ 64 
+ 65 	<span class="n">dead_lock_001_glb_dataA</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_001_glb_dataA</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+ 66 
+ 67 	<span class="cm">/* lock A */</span>
+ 68 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+ 69 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_001_glb_mutexA</span><span class="p">);</span>
+ 70 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+ 71 
+ 72 	<span class="n">dead_lock_001_glb_dataB</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_001_glb_dataB</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+ 73 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+ 74 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_001_glb_mutexA</span><span class="p">);</span>
+ 75 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+ 76 
+ 77 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+ 78 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_001_glb_mutexB</span><span class="p">);</span>
+ 79 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+ 80 	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+ 81 <span class="p">}</span>
+ 82 
+ 83 <span class="kt">void</span> <span class="nf">dead_lock_001</span> <span class="p">()</span>
+ 84 <span class="p">{</span>
+ 85 	<span class="n">pthread_t</span> <span class="n">tid1</span><span class="p">;</span>
+ 86 	<span class="n">pthread_t</span> <span class="n">tid2</span><span class="p">;</span>
+ 87 
+ 88 	<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_001_glb_mutexA</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+ 89 	<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_001_glb_mutexB</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+ 90 
+ 91 	<span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">dead_lock_001_tsk_001</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+ 92 	<span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">dead_lock_001_tsk_002</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+ 93 
+ 94 	<span class="n">pthread_join</span><span class="p">(</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+ 95 	<span class="n">pthread_join</span><span class="p">(</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+ 96 
+ 97 	<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_001_glb_mutexA</span><span class="p">);</span>
+ 98 	<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_001_glb_mutexB</span><span class="p">);</span>
+ 99 <span class="p">}</span>
+100 
+101 <span class="cp">#if defined(CHECKER_POLYSPACE)</span>
+102 <span class="kt">void</span> <span class="nf">dead_lock_001_tskentry_001</span> <span class="p">()</span>
+103 <span class="p">{</span>
+104 	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+105 	<span class="p">{</span>
+106 		<span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">())</span>
+107 		<span class="p">{</span>
+108 			<span class="n">dead_lock_001_tsk_001</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+109 		<span class="p">}</span>
+110 	<span class="p">}</span>
+111 <span class="p">}</span>
+112 
+113 <span class="kt">void</span> <span class="nf">dead_lock_001_tskentry_002</span> <span class="p">()</span>
+114 <span class="p">{</span>
+115 	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+116 	<span class="p">{</span>
+117 		<span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">())</span>
+118 		<span class="p">{</span>
+119 			<span class="n">dead_lock_001_tsk_002</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+120 		<span class="p">}</span>
+121 	<span class="p">}</span>
+122 <span class="p">}</span>
+123 <span class="cp">#endif </span><span class="cm">/* defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+124 
+125 <span class="cm">/*</span>
+126 <span class="cm"> * Types of defects: deadlock</span>
+127 <span class="cm"> * Complexity: exclusive control three resources task 1: A -&gt; B, task 2: B -&gt; C and task 3: C -&gt; A</span>
+128 <span class="cm"> */</span>
+129 
+130 <span class="n">pthread_mutex_t</span> <span class="n">dead_lock_002_glb_mutexA</span> <span class="o">=</span> <span class="n">PTHREAD_MUTEX_INITIALIZER</span><span class="p">;</span>
+131 <span class="n">pthread_mutex_t</span> <span class="n">dead_lock_002_glb_mutexB</span> <span class="o">=</span> <span class="n">PTHREAD_MUTEX_INITIALIZER</span><span class="p">;</span>
+132 <span class="n">pthread_mutex_t</span> <span class="n">dead_lock_002_glb_mutexC</span> <span class="o">=</span> <span class="n">PTHREAD_MUTEX_INITIALIZER</span><span class="p">;</span>
+133 <span class="cp">#if defined(CHECKER_POLYSPACE)</span>
+134 <span class="kt">void</span> <span class="nf">dead_lock_002_glb_mutexA_lock</span> <span class="p">()</span> <span class="p">{}</span>
+135 <span class="kt">void</span> <span class="nf">dead_lock_002_glb_mutexA_unlock</span> <span class="p">()</span> <span class="p">{}</span>
+136 <span class="kt">void</span> <span class="nf">dead_lock_002_glb_mutexB_lock</span> <span class="p">()</span> <span class="p">{}</span>
+137 <span class="kt">void</span> <span class="nf">dead_lock_002_glb_mutexB_unlock</span> <span class="p">()</span> <span class="p">{}</span>
+138 <span class="kt">void</span> <span class="nf">dead_lock_002_glb_mutexC_lock</span> <span class="p">()</span> <span class="p">{}</span>
+139 <span class="kt">void</span> <span class="nf">dead_lock_002_glb_mutexC_unlock</span> <span class="p">()</span> <span class="p">{}</span>
+140 <span class="cp">#endif </span><span class="cm">/* #if defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+141 
+142 <span class="kt">int</span> <span class="n">dead_lock_002_glb_dataA</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+143 <span class="kt">int</span> <span class="n">dead_lock_002_glb_dataB</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+144 <span class="kt">int</span> <span class="n">dead_lock_002_glb_dataC</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+145 
+146 <span class="kt">void</span><span class="o">*</span> <span class="nf">dead_lock_002_tsk_001</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">pram</span><span class="p">)</span>
+147 <span class="p">{</span>
+148 	<span class="cm">/* lock A */</span>
+149 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+150 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexA</span><span class="p">);</span>
+151 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+152 	<span class="n">dead_lock_002_glb_dataA</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_002_glb_dataA</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+153 
+154 	<span class="cm">/* lock B */</span>
+155 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+156 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexB</span><span class="p">);</span>
+157 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+158 	<span class="n">dead_lock_002_glb_dataB</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_002_glb_dataB</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+159 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+160 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexB</span><span class="p">);</span>
+161 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+162 
+163 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+164 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexA</span><span class="p">);</span>
+165 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+166 	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+167 <span class="p">}</span>
+168 
+169 <span class="kt">void</span><span class="o">*</span> <span class="nf">dead_lock_002_tsk_002</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">pram</span><span class="p">)</span>
+170 <span class="p">{</span>
+171 	<span class="cm">/* lock B */</span>
+172 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+173 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexB</span><span class="p">);</span>
+174 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+175 	<span class="n">dead_lock_002_glb_dataB</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_002_glb_dataB</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+176 
+177 	<span class="cm">/* lock C */</span>
+178 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+179 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexC</span><span class="p">);</span>
+180 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+181 	<span class="n">dead_lock_002_glb_dataC</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_002_glb_dataC</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+182 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+183 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexC</span><span class="p">);</span>
+184 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+185 
+186 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+187 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexB</span><span class="p">);</span>
+188 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+189 	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+190 <span class="p">}</span>
+191 
+192 <span class="kt">void</span><span class="o">*</span> <span class="nf">dead_lock_002_tsk_003</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">pram</span><span class="p">)</span>
+193 <span class="p">{</span>
+194 	<span class="cm">/* lock C */</span>
+195 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+196 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexC</span><span class="p">);</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Dead Lock*/</span>
+197 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+198 	<span class="n">dead_lock_002_glb_dataC</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_002_glb_dataC</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+199 
+200 	<span class="cm">/* lock A */</span>
+201 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+202 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexA</span><span class="p">);</span>
+203 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+204 	<span class="n">dead_lock_002_glb_dataA</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_002_glb_dataA</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+205 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+206 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexA</span><span class="p">);</span>
+207 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+208 
+209 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+210 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexC</span><span class="p">);</span>
+211 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+212 	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+213 <span class="p">}</span>
+214 
+215 <span class="kt">void</span> <span class="nf">dead_lock_002</span> <span class="p">()</span>
+216 <span class="p">{</span>
+217 	<span class="n">pthread_t</span> <span class="n">tid1</span><span class="p">;</span>
+218 	<span class="n">pthread_t</span> <span class="n">tid2</span><span class="p">;</span>
+219 	<span class="n">pthread_t</span> <span class="n">tid3</span><span class="p">;</span>
+220 
+221 	<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexA</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+222 	<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexB</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+223 	<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexC</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+224 
+225 	<span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">dead_lock_002_tsk_001</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+226 	<span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">dead_lock_002_tsk_002</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+227 	<span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid3</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">dead_lock_002_tsk_003</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+228 
+229 	<span class="n">pthread_join</span><span class="p">(</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+230 	<span class="n">pthread_join</span><span class="p">(</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+231 	<span class="n">pthread_join</span><span class="p">(</span><span class="n">tid3</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+232 
+233 	<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexA</span><span class="p">);</span>
+234 	<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexB</span><span class="p">);</span>
+235 	<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_002_glb_mutexC</span><span class="p">);</span>
+236 <span class="p">}</span>
+237 
+238 <span class="cp">#if defined(CHECKER_POLYSPACE)</span>
+239 <span class="kt">void</span> <span class="nf">dead_lock_002_tskentry_001</span> <span class="p">()</span>
+240 <span class="p">{</span>
+241 	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+242 	<span class="p">{</span>
+243 		<span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">())</span>
+244 		<span class="p">{</span>
+245 			<span class="n">dead_lock_002_tsk_001</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+246 		<span class="p">}</span>
+247 	<span class="p">}</span>
+248 <span class="p">}</span>
+249 
+250 <span class="kt">void</span> <span class="nf">dead_lock_002_tskentry_002</span> <span class="p">()</span>
+251 <span class="p">{</span>
+252 	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+253 	<span class="p">{</span>
+254 		<span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">())</span>
+255 		<span class="p">{</span>
+256 			<span class="n">dead_lock_002_tsk_002</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+257 		<span class="p">}</span>
+258 	<span class="p">}</span>
+259 <span class="p">}</span>
+260 
+261 <span class="kt">void</span> <span class="nf">dead_lock_002_tskentry_003</span> <span class="p">()</span>
+262 <span class="p">{</span>
+263 	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+264 	<span class="p">{</span>
+265 		<span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">())</span>
+266 		<span class="p">{</span>
+267 			<span class="n">dead_lock_002_tsk_003</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+268 		<span class="p">}</span>
+269 	<span class="p">}</span>
+270 <span class="p">}</span>
+271 <span class="cp">#endif </span><span class="cm">/* defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+272 
+273 <span class="cm">/*</span>
+274 <span class="cm"> * Types of defects: deadlock</span>
+275 <span class="cm"> * Complexity: exclusive control three resources task 1: A -&gt; B -&gt; C, task 2: B -&gt; A -&gt; C</span>
+276 <span class="cm"> */</span>
+277 <span class="n">pthread_mutex_t</span> <span class="n">dead_lock_003_glb_mutexA_</span><span class="p">;</span>
+278 <span class="n">pthread_mutex_t</span> <span class="n">dead_lock_003_glb_mutexB_</span><span class="p">;</span>
+279 <span class="n">pthread_mutex_t</span> <span class="n">dead_lock_003_glb_mutexC_</span><span class="p">;</span>
+280 <span class="n">pthread_mutex_t</span> <span class="o">*</span><span class="n">dead_lock_003_glb_mutexA</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexA_</span><span class="p">;</span>
+281 <span class="n">pthread_mutex_t</span> <span class="o">*</span><span class="n">dead_lock_003_glb_mutexB</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexB_</span><span class="p">;</span>
+282 <span class="n">pthread_mutex_t</span> <span class="o">*</span><span class="n">dead_lock_003_glb_mutexC</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexC_</span><span class="p">;</span>
+283 <span class="cp">#if defined(CHECKER_POLYSPACE)</span>
+284 <span class="kt">void</span> <span class="nf">dead_lock_003_glb_mutexA_lock</span> <span class="p">()</span> <span class="p">{}</span>
+285 <span class="kt">void</span> <span class="nf">dead_lock_003_glb_mutexA_unlock</span> <span class="p">()</span> <span class="p">{}</span>
+286 <span class="kt">void</span> <span class="nf">dead_lock_003_glb_mutexB_lock</span> <span class="p">()</span> <span class="p">{}</span>
+287 <span class="kt">void</span> <span class="nf">dead_lock_003_glb_mutexB_unlock</span> <span class="p">()</span> <span class="p">{}</span>
+288 <span class="kt">void</span> <span class="nf">dead_lock_003_glb_mutexC_lock</span> <span class="p">()</span> <span class="p">{}</span>
+289 <span class="kt">void</span> <span class="nf">dead_lock_003_glb_mutexC_unlock</span> <span class="p">()</span> <span class="p">{}</span>
+290 <span class="cp">#endif </span><span class="cm">/* #if defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+291 
+292 <span class="kt">int</span> <span class="n">dead_lock_003_glb_dataA</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+293 <span class="kt">int</span> <span class="n">dead_lock_003_glb_dataB</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+294 <span class="kt">int</span> <span class="n">dead_lock_003_glb_dataC</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+295 
+296 <span class="kt">void</span><span class="o">*</span> <span class="nf">dead_lock_003_tsk_001</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">pram</span><span class="p">)</span>
+297 <span class="p">{</span>
+298 	<span class="cm">/* lock A */</span>
+299 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+300 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexA</span><span class="p">);</span>
+301 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+302 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexA_</span><span class="p">);</span>
+303 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+304 	<span class="n">dead_lock_003_glb_dataA</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_003_glb_dataA</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+305 
+306 	<span class="cm">/* lock B */</span>
+307 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+308 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexB</span><span class="p">);</span>
+309 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+310 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexB_</span><span class="p">);</span>
+311 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+312 	<span class="n">dead_lock_003_glb_dataB</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_003_glb_dataB</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+313 
+314 	<span class="cm">/* lock C */</span>
+315 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+316 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexC</span><span class="p">);</span>
+317 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+318 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexC_</span><span class="p">);</span>
+319 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+320 	<span class="n">dead_lock_003_glb_dataC</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_003_glb_dataC</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+321 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+322 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexC</span><span class="p">);</span>
+323 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+324 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexC_</span><span class="p">);</span>
+325 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+326 
+327 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+328 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexB</span><span class="p">);</span>
+329 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+330 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexB_</span><span class="p">);</span>
+331 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+332 
+333 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+334 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexA</span><span class="p">);</span>
+335 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+336 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexA_</span><span class="p">);</span>
+337 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+338 	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+339 <span class="p">}</span>
+340 
+341 <span class="kt">void</span><span class="o">*</span> <span class="nf">dead_lock_003_tsk_002</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">pram</span><span class="p">)</span>
+342 <span class="p">{</span>
+343 	<span class="cm">/* lock B */</span>
+344 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+345 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexB</span><span class="p">);</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Dead Lock*/</span>
+346 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+347 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexB_</span><span class="p">);</span>
+348 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+349 	<span class="n">dead_lock_003_glb_dataB</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_003_glb_dataB</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+350 
+351 	<span class="cm">/* lock A */</span>
+352 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+353 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexA</span><span class="p">);</span>
+354 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+355 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexA_</span><span class="p">);</span>
+356 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+357 	<span class="n">dead_lock_003_glb_dataA</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_003_glb_dataA</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+358 
+359 	<span class="cm">/* lock C */</span>
+360 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+361 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexC</span><span class="p">);</span>
+362 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+363 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexC_</span><span class="p">);</span>
+364 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+365 	<span class="n">dead_lock_003_glb_dataC</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_003_glb_dataC</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+366 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+367 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexC</span><span class="p">);</span>
+368 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+369 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexC_</span><span class="p">);</span>
+370 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+371 
+372 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+373 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexA</span><span class="p">);</span>
+374 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+375 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexA_</span><span class="p">);</span>
+376 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+377 
+378 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+379 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexB</span><span class="p">);</span>
+380 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+381 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_003_glb_mutexB_</span><span class="p">);</span>
+382 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+383 	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+384 <span class="p">}</span>
+385 
+386 <span class="kt">void</span> <span class="nf">dead_lock_003</span> <span class="p">()</span>
+387 <span class="p">{</span>
+388 	<span class="n">pthread_t</span> <span class="n">tid1</span><span class="p">;</span>
+389 	<span class="n">pthread_t</span> <span class="n">tid2</span><span class="p">;</span>
+390 
+391 	<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexA</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+392 	<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexB</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+393 	<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexC</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+394 
+395 	<span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">dead_lock_003_tsk_001</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+396 	<span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">dead_lock_003_tsk_002</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+397 
+398 	<span class="n">pthread_join</span><span class="p">(</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+399 	<span class="n">pthread_join</span><span class="p">(</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+400 
+401 	<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexA</span><span class="p">);</span>
+402 	<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexB</span><span class="p">);</span>
+403 	<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="n">dead_lock_003_glb_mutexC</span><span class="p">);</span>
+404 <span class="p">}</span>
+405 
+406 <span class="cp">#if defined(CHECKER_POLYSPACE)</span>
+407 <span class="kt">void</span> <span class="nf">dead_lock_003_tskentry_001</span> <span class="p">()</span>
+408 <span class="p">{</span>
+409 	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+410 	<span class="p">{</span>
+411 		<span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">())</span>
+412 		<span class="p">{</span>
+413 			<span class="n">dead_lock_003_tsk_001</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+414 		<span class="p">}</span>
+415 	<span class="p">}</span>
+416 <span class="p">}</span>
+417 
+418 <span class="kt">void</span> <span class="nf">dead_lock_003_tskentry_002</span> <span class="p">()</span>
+419 <span class="p">{</span>
+420 	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+421 	<span class="p">{</span>
+422 		<span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">())</span>
+423 		<span class="p">{</span>
+424 			<span class="n">dead_lock_003_tsk_002</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+425 		<span class="p">}</span>
+426 	<span class="p">}</span>
+427 <span class="p">}</span>
+428 <span class="cp">#endif </span><span class="cm">/* defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+429 
+430 <span class="cm">/*</span>
+431 <span class="cm"> * Types of defects: deadlock</span>
+432 <span class="cm"> * Complexity: exclusive control three resources task 1: A -&gt; B -&gt; C, task 2: B -&gt; C -&gt; A</span>
+433 <span class="cm"> */</span>
+434 <span class="n">pthread_mutex_t</span> <span class="n">dead_lock_004_glb_mutexA_</span><span class="p">;</span>
+435 <span class="n">pthread_mutex_t</span> <span class="n">dead_lock_004_glb_mutexB_</span><span class="p">;</span>
+436 <span class="n">pthread_mutex_t</span> <span class="n">dead_lock_004_glb_mutexC_</span><span class="p">;</span>
+437 <span class="n">pthread_mutex_t</span> <span class="o">*</span><span class="n">dead_lock_004_glb_mutexA</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexA_</span><span class="p">;</span>
+438 <span class="n">pthread_mutex_t</span> <span class="o">*</span><span class="n">dead_lock_004_glb_mutexB</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexB_</span><span class="p">;</span>
+439 <span class="n">pthread_mutex_t</span> <span class="o">*</span><span class="n">dead_lock_004_glb_mutexC</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexC_</span><span class="p">;</span>
+440 <span class="cp">#if defined(CHECKER_POLYSPACE)</span>
+441 <span class="kt">void</span> <span class="nf">dead_lock_004_glb_mutexA_lock</span> <span class="p">()</span> <span class="p">{}</span>
+442 <span class="kt">void</span> <span class="nf">dead_lock_004_glb_mutexA_unlock</span> <span class="p">()</span> <span class="p">{}</span>
+443 <span class="kt">void</span> <span class="nf">dead_lock_004_glb_mutexB_lock</span> <span class="p">()</span> <span class="p">{}</span>
+444 <span class="kt">void</span> <span class="nf">dead_lock_004_glb_mutexB_unlock</span> <span class="p">()</span> <span class="p">{}</span>
+445 <span class="kt">void</span> <span class="nf">dead_lock_004_glb_mutexC_lock</span> <span class="p">()</span> <span class="p">{}</span>
+446 <span class="kt">void</span> <span class="nf">dead_lock_004_glb_mutexC_unlock</span> <span class="p">()</span> <span class="p">{}</span>
+447 <span class="cp">#endif </span><span class="cm">/* #if defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+448 
+449 <span class="kt">int</span> <span class="n">dead_lock_004_glb_dataA</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+450 <span class="kt">int</span> <span class="n">dead_lock_004_glb_dataB</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+451 <span class="kt">int</span> <span class="n">dead_lock_004_glb_dataC</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+452 
+453 <span class="kt">void</span><span class="o">*</span> <span class="nf">dead_lock_004_tsk_001</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">pram</span><span class="p">)</span>
+454 <span class="p">{</span>
+455 	<span class="cm">/* lock A */</span>
+456 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+457 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexA</span><span class="p">);</span>
+458 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+459 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexA_</span><span class="p">);</span>
+460 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+461 	<span class="n">dead_lock_004_glb_dataA</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_004_glb_dataA</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+462 
+463 	<span class="cm">/* lock B */</span>
+464 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+465 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexB</span><span class="p">);</span>
+466 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+467 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexB_</span><span class="p">);</span>
+468 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+469 	<span class="n">dead_lock_004_glb_dataB</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_004_glb_dataB</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+470 
+471 	<span class="cm">/* lock C */</span>
+472 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+473 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexC</span><span class="p">);</span>
+474 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+475 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexC_</span><span class="p">);</span>
+476 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+477 	<span class="n">dead_lock_004_glb_dataC</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_004_glb_dataC</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+478 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+479 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexC</span><span class="p">);</span>
+480 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+481 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexC_</span><span class="p">);</span>
+482 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+483 
+484 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+485 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexB</span><span class="p">);</span>
+486 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+487 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexB_</span><span class="p">);</span>
+488 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+489 
+490 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+491 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexA</span><span class="p">);</span>
+492 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+493 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexA_</span><span class="p">);</span>
+494 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+495 	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+496 <span class="p">}</span>
+497 
+498 <span class="kt">void</span><span class="o">*</span> <span class="nf">dead_lock_004_tsk_002</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">pram</span><span class="p">)</span>
+499 <span class="p">{</span>
+500 	<span class="cm">/* lock B */</span>
+501 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+502 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexB</span><span class="p">);</span> <span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Dead Lock*/</span>
+503 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+504 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexB_</span><span class="p">);</span>
+505 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+506 	<span class="n">dead_lock_004_glb_dataB</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_004_glb_dataB</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+507 
+508 	<span class="cm">/* lock C */</span>
+509 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+510 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexC</span><span class="p">);</span>
+511 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+512 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexC_</span><span class="p">);</span>
+513 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+514 	<span class="n">dead_lock_004_glb_dataC</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_004_glb_dataC</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+515 
+516 	<span class="cm">/* lock A */</span>
+517 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+518 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexA</span><span class="p">);</span>
+519 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+520 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexA_</span><span class="p">);</span>
+521 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+522 	<span class="n">dead_lock_004_glb_dataA</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_004_glb_dataA</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+523 
+524 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+525 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexA</span><span class="p">);</span>
+526 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+527 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexA_</span><span class="p">);</span>
+528 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+529 
+530 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+531 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexC</span><span class="p">);</span>
+532 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+533 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexC_</span><span class="p">);</span>
+534 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+535 
+536 
+537 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+538 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexB</span><span class="p">);</span>
+539 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+540 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_004_glb_mutexB_</span><span class="p">);</span>
+541 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+542 	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+543 <span class="p">}</span>
+544 
+545 <span class="kt">void</span> <span class="nf">dead_lock_004</span> <span class="p">()</span>
+546 <span class="p">{</span>
+547 	<span class="n">pthread_t</span> <span class="n">tid1</span><span class="p">;</span>
+548 	<span class="n">pthread_t</span> <span class="n">tid2</span><span class="p">;</span>
+549 
+550 	<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexA</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+551 	<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexB</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+552 	<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexC</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+553 
+554 	<span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">dead_lock_004_tsk_001</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+555 	<span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">dead_lock_004_tsk_002</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+556 
+557 	<span class="n">pthread_join</span><span class="p">(</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+558 	<span class="n">pthread_join</span><span class="p">(</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+559 
+560 	<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexA</span><span class="p">);</span>
+561 	<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexB</span><span class="p">);</span>
+562 	<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="n">dead_lock_004_glb_mutexC</span><span class="p">);</span>
+563 <span class="p">}</span>
+564 
+565 <span class="cp">#if defined(CHECKER_POLYSPACE)</span>
+566 <span class="kt">void</span> <span class="nf">dead_lock_004_tskentry_001</span> <span class="p">()</span>
+567 <span class="p">{</span>
+568 	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+569 	<span class="p">{</span>
+570 		<span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">())</span>
+571 		<span class="p">{</span>
+572 			<span class="n">dead_lock_004_tsk_001</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+573 		<span class="p">}</span>
+574 	<span class="p">}</span>
+575 <span class="p">}</span>
+576 
+577 <span class="kt">void</span> <span class="nf">dead_lock_004_tskentry_002</span> <span class="p">()</span>
+578 <span class="p">{</span>
+579 	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+580 	<span class="p">{</span>
+581 		<span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">())</span>
+582 		<span class="p">{</span>
+583 			<span class="n">dead_lock_004_tsk_002</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+584 		<span class="p">}</span>
+585 	<span class="p">}</span>
+586 <span class="p">}</span>
+587 <span class="cp">#endif </span><span class="cm">/* defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+588 
+589 <span class="cm">/*</span>
+590 <span class="cm"> * Types of defects: deadlock</span>
+591 <span class="cm"> * Complexity: exclusive control over resources, across functions</span>
+592 <span class="cm"> */</span>
+593 <span class="n">pthread_mutex_t</span> <span class="n">dead_lock_005_glb_mutexA_</span><span class="p">;</span>
+594 <span class="n">pthread_mutex_t</span> <span class="n">dead_lock_005_glb_mutexB_</span><span class="p">;</span>
+595 <span class="n">pthread_mutex_t</span> <span class="o">*</span><span class="n">dead_lock_005_glb_mutexA</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">dead_lock_005_glb_mutexA_</span><span class="p">;</span>
+596 <span class="n">pthread_mutex_t</span> <span class="o">*</span><span class="n">dead_lock_005_glb_mutexB</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">dead_lock_005_glb_mutexB_</span><span class="p">;</span>
+597 <span class="cp">#if defined(CHECKER_POLYSPACE)</span>
+598 <span class="kt">void</span> <span class="nf">dead_lock_005_glb_mutexA_lock</span> <span class="p">()</span> <span class="p">{}</span>
+599 <span class="kt">void</span> <span class="nf">dead_lock_005_glb_mutexA_unlock</span> <span class="p">()</span> <span class="p">{}</span>
+600 <span class="kt">void</span> <span class="nf">dead_lock_005_glb_mutexB_lock</span> <span class="p">()</span> <span class="p">{}</span>
+601 <span class="kt">void</span> <span class="nf">dead_lock_005_glb_mutexB_unlock</span> <span class="p">()</span> <span class="p">{}</span>
+602 <span class="cp">#endif </span><span class="cm">/* #if defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+603 
+604 <span class="kt">int</span> <span class="n">dead_lock_005_glb_dataA</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+605 <span class="kt">int</span> <span class="n">dead_lock_005_glb_dataB</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+606 
+607 <span class="kt">void</span> <span class="nf">dead_lock_005_func_001</span> <span class="p">()</span>
+608 <span class="p">{</span>
+609 	<span class="cm">/* lock B */</span>
+610 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+611 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_005_glb_mutexB</span><span class="p">);</span>
+612 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+613 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_005_glb_mutexB_</span><span class="p">);</span>
+614 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+615 
+616 	<span class="n">dead_lock_005_glb_dataB</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_005_glb_dataB</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+617 
+618 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+619 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_005_glb_mutexB</span><span class="p">);</span>
+620 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+621 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_005_glb_mutexB_</span><span class="p">);</span>
+622 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+623 <span class="p">}</span>
+624 
+625 <span class="kt">void</span> <span class="nf">dead_lock_005_func_002</span> <span class="p">()</span>
+626 <span class="p">{</span>
+627 	<span class="cm">/* lock A */</span>
+628 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+629 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_005_glb_mutexA</span><span class="p">);</span><span class="cm">/*Tool should detect this line as error*/</span> <span class="cm">/*ERROR:Dead Lock*/</span>
+630 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+631 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_005_glb_mutexA_</span><span class="p">);</span>
+632 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+633 
+634 	<span class="n">dead_lock_005_glb_dataA</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_005_glb_dataA</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+635 
+636 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+637 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_005_glb_mutexA</span><span class="p">);</span>
+638 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+639 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_005_glb_mutexA_</span><span class="p">);</span>
+640 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+641 <span class="p">}</span>
+642 
+643 <span class="kt">void</span><span class="o">*</span> <span class="nf">dead_lock_005_tsk_001</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">pram</span><span class="p">)</span>
+644 <span class="p">{</span>
+645 	<span class="cm">/* lock A */</span>
+646 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+647 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_005_glb_mutexA</span><span class="p">);</span>
+648 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+649 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_005_glb_mutexA_</span><span class="p">);</span>
+650 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+651 	<span class="n">dead_lock_005_glb_dataA</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_005_glb_dataA</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+652 
+653 	<span class="cm">/* lock B */</span>
+654 	<span class="n">dead_lock_005_func_001</span><span class="p">();</span>
+655 
+656 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+657 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_005_glb_mutexA</span><span class="p">);</span>
+658 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+659 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_005_glb_mutexA_</span><span class="p">);</span>
+660 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+661 	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+662 <span class="p">}</span>
+663 
+664 <span class="kt">void</span><span class="o">*</span> <span class="nf">dead_lock_005_tsk_002</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">pram</span><span class="p">)</span>
+665 <span class="p">{</span>
+666 	<span class="cm">/* lock B */</span>
+667 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+668 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">dead_lock_005_glb_mutexB</span><span class="p">);</span>
+669 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+670 	<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_005_glb_mutexB_</span><span class="p">);</span>
+671 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+672 	<span class="n">dead_lock_005_glb_dataB</span> <span class="o">=</span> <span class="p">(</span><span class="n">dead_lock_005_glb_dataB</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+673 
+674 	<span class="cm">/* lock A */</span>
+675 	<span class="n">dead_lock_005_func_002</span><span class="p">();</span>
+676 
+677 <span class="cp">#if ! defined(CHECKER_POLYSPACE)</span>
+678 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">dead_lock_005_glb_mutexB</span><span class="p">);</span>
+679 <span class="cp">#else </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+680 	<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dead_lock_005_glb_mutexB_</span><span class="p">);</span>
+681 <span class="cp">#endif </span><span class="cm">/* ! defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+682 	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+683 <span class="p">}</span>
+684 
+685 <span class="kt">void</span> <span class="nf">dead_lock_005</span> <span class="p">()</span>
+686 <span class="p">{</span>
+687 	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;dead lock&quot;</span><span class="p">);</span>
+688 	<span class="n">pthread_t</span> <span class="n">tid1</span><span class="p">;</span>
+689 	<span class="n">pthread_t</span> <span class="n">tid2</span><span class="p">;</span>
+690 
+691 	<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="n">dead_lock_005_glb_mutexA</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+692 	<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="n">dead_lock_005_glb_mutexB</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+693 
+694 	<span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">dead_lock_005_tsk_001</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+695 	<span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">dead_lock_005_tsk_002</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+696 
+697 	<span class="n">pthread_join</span><span class="p">(</span><span class="n">tid1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+698 	<span class="n">pthread_join</span><span class="p">(</span><span class="n">tid2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+699 
+700 	<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="n">dead_lock_005_glb_mutexA</span><span class="p">);</span>
+701 	<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="n">dead_lock_005_glb_mutexB</span><span class="p">);</span>
+702 <span class="p">}</span>
+703 
+704 <span class="cp">#if defined(CHECKER_POLYSPACE)</span>
+705 <span class="kt">void</span> <span class="nf">dead_lock_005_tskentry_001</span> <span class="p">()</span>
+706 <span class="p">{</span>
+707 	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+708 	<span class="p">{</span>
+709 		<span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">())</span>
+710 		<span class="p">{</span>
+711 			<span class="n">dead_lock_005_tsk_001</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+712 		<span class="p">}</span>
+713 	<span class="p">}</span>
+714 <span class="p">}</span>
+715 
+716 <span class="kt">void</span> <span class="nf">dead_lock_005_tskentry_002</span> <span class="p">()</span>
+717 <span class="p">{</span>
+718 	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+719 	<span class="p">{</span>
+720 		<span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">())</span>
+721 		<span class="p">{</span>
+722 			<span class="n">dead_lock_005_tsk_002</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+723 		<span class="p">}</span>
+724 	<span class="p">}</span>
+725 <span class="p">}</span>
+726 <span class="cp">#endif </span><span class="cm">/* defined(CHECKER_POLYSPACE) */</span><span class="cp"></span>
+727 
+728 <span class="cm">/*</span>
+729 <span class="cm"> * Types of defects: deadlock</span>
+730 <span class="cm"> * Deadlock main function</span>
+731 <span class="cm"> */</span>
+732 <span class="k">extern</span> <span class="k">volatile</span> <span class="kt">int</span> <span class="n">vflag</span><span class="p">;</span>
+733 <span class="kt">void</span> <span class="nf">dead_lock_main</span> <span class="p">()</span>
+734 <span class="p">{</span>
+735 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+736 	<span class="p">{</span>
+737 		<span class="n">dead_lock_001</span><span class="p">();</span>
+738 	<span class="p">}</span>
+739 
+740 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+741 	<span class="p">{</span>
+742 		<span class="n">dead_lock_002</span><span class="p">();</span>
+743 	<span class="p">}</span>
+744 
+745 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+746 	<span class="p">{</span>
+747 		<span class="n">dead_lock_003</span><span class="p">();</span>
+748 	<span class="p">}</span>
+749 
+750 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">4</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+751 	<span class="p">{</span>
+752 		<span class="n">dead_lock_004</span><span class="p">();</span>
+753 	<span class="p">}</span>
+754 
+755 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">5</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+756 	<span class="p">{</span>
+757 		<span class="n">dead_lock_005</span><span class="p">();</span>
+758 	<span class="p">}</span>
+759 <span class="p">}</span>
+760 
+</pre></div>
+</body>
+</html>
