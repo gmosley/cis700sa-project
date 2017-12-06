@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #f8f8f8; }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #888888 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
+.result { color: #F03434 }
+</style>
+</head>
+<body>
+<div class="highlight"><pre>
+  1 <span class="cm">/********Software Analysis - FY2013*************/</span>
+  2 <span class="cm">/*</span>
+  3 <span class="cm">* File Name: data_lost.c</span>
+  4 <span class="cm">* Defect Classification</span>
+  5 <span class="cm">* ---------------------</span>
+  6 <span class="cm">* Defect Type: Stack related defects</span>
+  7 <span class="cm">* Defect Sub-type: Stack underrun</span>
+  8 <span class="cm">* Description: Defect Free Code to identify false positives in stack underrun conditions</span>
+  9 <span class="cm">*/</span>
+ 10 
+ 11 <span class="cm">/* (Note) The default stack reservation size used by the linker in windows XP (64bit) is 1 MB(=1048576 bytes)*/</span>
+ 12 <span class="cm">/*	Index starts from zero*/</span>
+ 13 
+ 14 <span class="cp">#include</span> <span class="cpf">&quot;HeaderFile.h&quot;</span><span class="cp"></span>
+ 15 
+ 16 <span class="cm">/*</span>
+ 17 <span class="cm"> * Types of defects: stack underrun</span>
+ 18 <span class="cm"> * Complexity: When using char array</span>
+ 19 <span class="cm"> */</span>
+ 20 <span class="kt">void</span> <span class="nf">st_underrun_001</span> <span class="p">()</span>
+ 21 <span class="p">{</span>
+ 22 	 <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+ 23 	 <span class="n">strcpy</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s">&quot;my string&quot;</span><span class="p">);</span>
+<span class="result">    > flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+ 24 	 <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="result">    > flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+ 25 	 <span class="k">while</span> <span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;Z&#39;</span><span class="p">)</span>
+<span class="result">    > infer: (HIGH Buffer Overrun L3) Offset: [-1, +oo] Size: [10, 10].</span>
+ 26 	 <span class="p">{</span>
+ 27 		 <span class="n">len</span><span class="o">--</span><span class="p">;</span> <span class="cm">/*Tool should not detect this line as error*/</span> <span class="cm">/* No Stack Under RUN error */</span>
+ 28 		 <span class="k">if</span> <span class="p">(</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">)</span>
+ 29 			 <span class="k">break</span><span class="p">;</span>
+ 30 	 <span class="p">}</span>
+ 31 <span class="p">}</span>
+ 32 
+ 33 <span class="cm">/*</span>
+ 34 <span class="cm"> * Types of defects: stack underrun</span>
+ 35 <span class="cm"> * Complexity:-	When using structure - passed as function arguments - one function level  _</span>
+ 36 <span class="cm"> */</span>
+ 37 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+ 38 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+ 39 	<span class="kt">char</span> <span class="n">buf1</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+ 40 	<span class="kt">char</span> <span class="n">buf2</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+ 41 	<span class="kt">char</span> <span class="n">buf3</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+ 42 	<span class="kt">char</span> <span class="n">buf4</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+ 43 	<span class="kt">char</span> <span class="n">buf5</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+ 44 	<span class="kt">char</span> <span class="n">buf6</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+ 45 <span class="p">}</span> <span class="n">st_underrun_002_s_001</span><span class="p">;</span>
+ 46 
+ 47 <span class="kt">void</span> <span class="nf">st_underrun_002_func_001</span> <span class="p">(</span><span class="n">st_underrun_002_s_001</span> <span class="n">s</span><span class="p">)</span>
+ 48 <span class="p">{</span>
+ 49 
+ 50 	 <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+<span class="result">    > flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+ 51 	 <span class="k">for</span> <span class="p">(;</span><span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;Z&#39;</span><span class="p">;</span><span class="n">len</span><span class="o">--</span><span class="p">)</span>  <span class="cm">/*Tool should not detect this line as error*/</span> <span class="cm">/* No Stack Under RUN error */</span>
+<span class="result">    > infer: (HIGH Buffer Overrun L3) Offset: [-1, +oo] Size: [10, 10].</span>
+ 52 	 <span class="p">{</span>
+ 53 	    <span class="k">if</span> <span class="p">(</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">)</span>
+ 54 			 <span class="k">break</span><span class="p">;</span>
+ 55 	 <span class="p">}</span>
+ 56 <span class="p">}</span>
+ 57 
+ 58 <span class="kt">void</span> <span class="nf">st_underrun_002</span> <span class="p">()</span>
+ 59 <span class="p">{</span>
+ 60 	<span class="n">st_underrun_002_s_001</span> <span class="n">s</span><span class="p">;</span>
+ 61 	<span class="n">strcpy</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">,</span><span class="s">&quot;STRING&quot;</span><span class="p">);</span>
+<span class="result">    > flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+ 62 	<span class="n">st_underrun_002_func_001</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+ 63 <span class="p">}</span>
+ 64 
+ 65 <span class="cm">/*</span>
+ 66 <span class="cm"> * Types of defects: stack underrun</span>
+ 67 <span class="cm"> * Complexity: When using structure - passed as function arguments - pointer to structure - 2 function Level _ _</span>
+ 68 <span class="cm"> */</span>
+ 69 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+ 70 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+ 71 	<span class="kt">char</span> <span class="n">buf1</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+ 72 	<span class="kt">char</span> <span class="n">buf2</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+ 73 	<span class="kt">char</span> <span class="n">buf3</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+ 74 	<span class="kt">char</span> <span class="n">buf4</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+ 75 <span class="p">}</span> <span class="n">st_underrun_003_s_001</span><span class="p">;</span>
+ 76 
+ 77 <span class="kt">void</span> <span class="nf">st_underrun_003_func_001</span> <span class="p">(</span><span class="n">st_underrun_003_s_001</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span>
+ 78 <span class="p">{</span>
+ 79 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;STRING&quot;</span><span class="p">;</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+ 80 	<span class="n">strcpy</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">,</span><span class="n">buf</span><span class="p">);</span>
+<span class="result">    > flawfinder: ([4]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
+ 81 <span class="p">}</span>
+ 82 
+ 83 <span class="kt">void</span> <span class="nf">st_underrun_003_func_002</span> <span class="p">(</span><span class="n">st_underrun_003_s_001</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span>
+ 84 <span class="p">{</span>
+ 85 	 <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+<span class="result">    > flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+ 86 	 <span class="k">do</span>
+ 87 	 <span class="p">{</span>
+ 88 		 <span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<span class="result">    > infer: (HIGH Buffer Overrun L3) Offset: [-1, +oo] Size: [10, 10].</span>
+ 89 		 <span class="n">len</span><span class="o">--</span><span class="p">;</span>
+ 90 		 <span class="k">if</span> <span class="p">(</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">)</span>
+ 91 			 <span class="k">break</span><span class="p">;</span>
+ 92 	 <span class="p">}</span><span class="k">while</span> <span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;Z&#39;</span><span class="p">);</span> <span class="cm">/*Tool should not detect this line as error*/</span> <span class="cm">/* No Stack Under RUN error */</span>
+ 93 <span class="p">}</span>
+ 94 
+ 95 <span class="kt">void</span> <span class="nf">st_underrun_003</span> <span class="p">()</span>
+ 96 <span class="p">{</span>
+ 97 	<span class="n">st_underrun_003_s_001</span> <span class="n">s</span><span class="p">;</span>
+ 98 	<span class="n">st_underrun_003_func_001</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">);</span>
+ 99 	<span class="n">st_underrun_003_func_002</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">);</span>
+100 <span class="p">}</span>
+101 
+102 <span class="cm">/*</span>
+103 <span class="cm"> * Types of defects: stack underrun</span>
+104 <span class="cm"> * Complexity: When using structure - passed as function arguments - pointer to structure -, return structure -3 function Level _ _ _</span>
+105 <span class="cm"> */</span>
+106 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+107 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+108 	<span class="kt">char</span> <span class="n">buf1</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+109 	<span class="kt">char</span> <span class="n">buf2</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+110 <span class="p">}</span> <span class="n">st_underrun_004_s_001</span><span class="p">;</span>
+111 
+112 <span class="kt">void</span> <span class="nf">st_underrun_004_func_002</span> <span class="p">(</span><span class="n">st_underrun_004_s_001</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span>
+113 <span class="p">{</span>
+114 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;STRING&quot;</span><span class="p">;</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+115 	<span class="n">strcpy</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">,</span><span class="n">buf</span><span class="p">);</span>
+<span class="result">    > flawfinder: ([4]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused).</span>
+116 <span class="p">}</span>
+117 
+118 <span class="n">st_underrun_004_s_001</span> <span class="nf">st_underrun_004_func_001</span> <span class="p">(</span><span class="n">st_underrun_004_s_001</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span>
+119 <span class="p">{</span>
+120 	<span class="n">st_underrun_004_s_001</span> <span class="n">s1</span><span class="p">;</span>
+121 	<span class="n">st_underrun_004_func_002</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+122 	<span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+<span class="result">    > flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+123 	 <span class="k">do</span>
+124 	 <span class="p">{</span>
+125 		 <span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;B&#39;</span><span class="p">;</span>
+<span class="result">    > infer: (HIGH Buffer Overrun L3) Offset: [-1, +oo] Size: [10, 10].</span>
+126 		 <span class="n">s1</span><span class="p">.</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">];</span>
+127 		 <span class="n">len</span><span class="o">--</span><span class="p">;</span>
+128 		 <span class="k">if</span> <span class="p">(</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">)</span>
+129 			 <span class="k">break</span><span class="p">;</span>
+130 	 <span class="p">}</span><span class="k">while</span> <span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;Z&#39;</span><span class="p">);</span> <span class="cm">/*Tool should not detect this line as error*/</span> <span class="cm">/* No Stack Under RUN error */</span>
+131 	 <span class="k">return</span> <span class="n">s1</span><span class="p">;</span>
+132 <span class="p">}</span>
+133 
+134 <span class="kt">void</span> <span class="nf">st_underrun_004</span> <span class="p">()</span>
+135 <span class="p">{</span>
+136 	<span class="n">st_underrun_004_s_001</span> <span class="n">s</span><span class="p">,</span><span class="n">s2</span><span class="p">;</span>
+137 	<span class="n">s2</span> <span class="o">=</span> <span class="n">st_underrun_004_func_001</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">);</span>
+138         <span class="n">sink</span> <span class="o">=</span> <span class="n">s2</span><span class="p">.</span><span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+139 <span class="p">}</span>
+140 
+141 <span class="cm">/*</span>
+142 <span class="cm"> * Types of defects: stack underrun</span>
+143 <span class="cm"> * Complexity: Stack under run when using	Recursive function	9 Level	__ __ __ __ __ __ __ __ __ __</span>
+144 <span class="cm"> */</span>
+145 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+146 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+147 <span class="p">}</span> <span class="n">st_underrun_005_s_001</span><span class="p">;</span>
+148 
+149 <span class="kt">void</span> <span class="nf">st_underrun_005_func_001</span> <span class="p">(</span><span class="n">st_underrun_005_s_001</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cnt</span><span class="p">)</span>
+150 <span class="p">{</span>
+151 	<span class="k">while</span> <span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">[</span><span class="n">cnt</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;Z&#39;</span> <span class="p">)</span>
+152 	<span class="p">{</span>
+153 		<span class="n">cnt</span><span class="o">--</span><span class="p">;</span>
+154 		<span class="k">if</span><span class="p">(</span><span class="n">cnt</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+155 		<span class="p">{</span>
+156 			<span class="n">st_underrun_005_func_001</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">cnt</span><span class="p">);</span>
+157 		<span class="p">}</span>
+158 	    <span class="k">else</span>
+159 	    <span class="p">{</span>
+160 	    	<span class="k">break</span><span class="p">;</span>
+161 			<span class="cm">/*s.buf[cnt] = &#39;C&#39;;*/</span> <span class="cm">/*Tool should not detect this line as error*/</span> <span class="cm">/* No Stack Under RUN error */</span>
+162 		<span class="p">}</span>
+163 	<span class="p">}</span>
+164 <span class="p">}</span>
+165 
+166 <span class="kt">void</span> <span class="nf">st_underrun_005</span> <span class="p">()</span>
+167 <span class="p">{</span>
+168 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+169 	<span class="n">st_underrun_005_s_001</span> <span class="n">s</span><span class="p">;</span>
+170 	<span class="n">strcpy</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">,</span><span class="s">&quot;STRING !&quot;</span><span class="p">);</span>
+<span class="result">    > flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+171 	<span class="n">st_underrun_005_func_001</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="mi">8</span><span class="p">);</span>
+172 	<span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+173         <span class="n">sink</span> <span class="o">=</span> <span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+174 <span class="p">}</span>
+175 
+176 <span class="cm">/*</span>
+177 <span class="cm"> * Types of defects: stack underrun</span>
+178 <span class="cm"> * Complexity:-	Stack under run when using Function pointer	Level 1	__</span>
+179 <span class="cm"> */</span>
+180 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+181 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+182 	<span class="kt">char</span> <span class="n">buf1</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+183 	<span class="kt">char</span> <span class="n">buf2</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+184 	<span class="kt">char</span> <span class="n">buf3</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+185 	<span class="kt">char</span> <span class="n">buf4</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+186 	<span class="kt">char</span> <span class="n">buf5</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+187 	<span class="kt">char</span> <span class="n">buf6</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+188 <span class="p">}</span> <span class="n">st_underrun_006_s_001</span><span class="p">;</span>
+189 
+190 <span class="kt">void</span> <span class="nf">st_underrun_006_func_001</span> <span class="p">(</span><span class="n">st_underrun_006_s_001</span> <span class="n">s</span><span class="p">)</span>
+191 <span class="p">{</span>
+192   <span class="c1">// JDR: commenting out -- this most certainly does access invalid RAM</span>
+193 <span class="cp">#if 0</span><span class="c"></span>
+194 <span class="c">	 int len = strlen(s.buf) - 1;</span>
+<span class="result">    > flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+195 <span class="c">	 char c = 0;</span>
+196 <span class="c">	 for (;s.buf[len] != &#39;Z&#39;;len--) /*Tool should not detect this line as error*/ /* No Stack Under RUN error */</span>
+197 <span class="c">	 {</span>
+198 <span class="c">         c = s.buf[len];</span>
+199 <span class="c">		 if ( len &lt; 0 )</span>
+200 <span class="c">			 break;</span>
+201 <span class="c">	 }</span>
+202 <span class="c">         sink = c;</span>
+203 <span class="cp">#endif</span>
+204 <span class="p">}</span>
+205 
+206 <span class="kt">void</span> <span class="nf">st_underrun_006</span> <span class="p">()</span>
+207 <span class="p">{</span>
+208 	<span class="n">st_underrun_006_s_001</span> <span class="n">s</span><span class="p">;</span>
+209         <span class="c1">// JDR: this is an array overrun (copying 12 bytes into a 10-byte array)</span>
+210         <span class="c1">// but maybe it is OK since the struct is guaranteed to have buf1 right</span>
+211         <span class="c1">// after buf?</span>
+212 	<span class="n">strcpy</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">,</span><span class="s">&quot;STRING !!!!&quot;</span><span class="p">);</span>
+<span class="result">    > flawfinder: ([2]  (buffer) strcpy) Does not check for buffer overflows when copying to destination [MS-banned] (CWE-120).  Consider using snprintf, strcpy_s, or strlcpy (warning: strncpy easily misused). Risk is low because the source is a constant string.</span>
+<span class="result">    > cppcheck: (error bufferAccessOutOfBounds) Buffer is accessed out of bounds: s.buf</span>
+<span class="result">    > scan-build: (Logic error ) String copy function overflows destination buffer</span>
+213 	<span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">func</span><span class="p">)(</span><span class="n">st_underrun_006_s_001</span><span class="p">);</span>
+214 	<span class="n">func</span> <span class="o">=</span> <span class="n">st_underrun_006_func_001</span><span class="p">;</span>
+215 	<span class="n">func</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+216 <span class="p">}</span>
+217 
+218 <span class="cm">/*</span>
+219 <span class="cm"> * Types of defects: stack underrun</span>
+220 <span class="cm"> * Complexity: Stack under run in a function called form else condition</span>
+221 <span class="cm"> */</span>
+222 <span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+223 	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+224 	<span class="kt">char</span> <span class="n">buf1</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+225 	<span class="kt">char</span> <span class="n">buf2</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+226 	<span class="kt">char</span> <span class="n">buf3</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+227 	<span class="kt">char</span> <span class="n">buf4</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+228 	<span class="kt">char</span> <span class="n">buf5</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="result">    > flawfinder: ([2]  (buffer) char) Statically-sized arrays can be improperly restricted, leading to potential overflows or other issues (CWE-119!/CWE-120).  Perform bounds checking, use functions that limit length, or ensure that the size is larger than the maximum possible length.</span>
+229 <span class="p">}</span> <span class="n">st_underrun_007_s_001</span><span class="p">;</span>
+230 
+231 <span class="kt">void</span> <span class="nf">st_underrun_007_func_001</span> <span class="p">(</span><span class="n">st_underrun_007_s_001</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span>
+232 <span class="p">{</span>
+233 	 <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+<span class="result">    > flawfinder: ([1]  (buffer) strlen) Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126).</span>
+234 	 <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+235 	 <span class="k">for</span> <span class="p">(;</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;Z&#39;</span><span class="p">;</span><span class="n">len</span><span class="o">--</span><span class="p">)</span>  
+<span class="result">    > infer: (HIGH Buffer Overrun L3) Offset: [-1, +oo] Size: [10, 10].</span>
+236 	 <span class="p">{</span>
+237         <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">[</span><span class="n">len</span><span class="p">];</span> <span class="cm">/*Tool should not detect this line as error*/</span> <span class="cm">/* No Stack Under RUN error */</span>
+238 		 <span class="k">if</span> <span class="p">(</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">)</span>
+239 			 <span class="k">break</span><span class="p">;</span>
+240 	 <span class="p">}</span>
+241          <span class="n">sink</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+242 <span class="p">}</span>
+243 
+244 <span class="kt">void</span> <span class="nf">st_underrun_007_func_002</span> <span class="p">(</span><span class="n">st_underrun_007_s_001</span> <span class="n">s</span><span class="p">)</span>
+245 <span class="p">{</span>
+246 	<span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+247 <span class="p">}</span>
+248 
+249 <span class="kt">void</span> <span class="nf">st_underrun_007</span> <span class="p">()</span>
+250 <span class="p">{</span>
+251 	<span class="kt">int</span> <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+252 	<span class="n">st_underrun_007_s_001</span> <span class="n">s</span><span class="p">;</span>
+253 	<span class="n">s</span><span class="p">.</span><span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+254 	<span class="k">if</span> <span class="p">(</span><span class="n">flag</span> <span class="o">&gt;</span><span class="mi">1</span> <span class="p">)</span>
+255 	<span class="p">{</span>
+256 		<span class="n">st_underrun_007_func_002</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+257 	<span class="p">}</span>
+258 	<span class="k">else</span>
+259 	<span class="p">{</span>
+260 		<span class="n">st_underrun_007_func_001</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">);</span>
+261 	<span class="p">}</span>
+262 <span class="p">}</span>
+263 
+264 <span class="cm">/*</span>
+265 <span class="cm"> * Types of defects: stack underrun</span>
+266 <span class="cm"> * Complexity: stack underrun main function</span>
+267 <span class="cm"> */</span>
+268 
+269 <span class="k">extern</span> <span class="k">volatile</span> <span class="kt">int</span> <span class="n">vflag</span><span class="p">;</span>
+270 <span class="kt">void</span> <span class="nf">st_underrun_main</span> <span class="p">()</span>
+271 <span class="p">{</span>
+272 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+273 	<span class="p">{</span>
+274 		<span class="n">st_underrun_001</span><span class="p">();</span>
+275 	<span class="p">}</span>
+276 
+277 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+278 	<span class="p">{</span>
+279 		<span class="n">st_underrun_002</span><span class="p">();</span>
+280 	<span class="p">}</span>
+281 
+282 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+283 	<span class="p">{</span>
+284 		<span class="n">st_underrun_003</span><span class="p">();</span>
+285 	<span class="p">}</span>
+286 
+287 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">4</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+288 	<span class="p">{</span>
+289 		<span class="n">st_underrun_004</span><span class="p">();</span>
+290 	<span class="p">}</span>
+291 
+292 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">5</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+293 	<span class="p">{</span>
+294 		<span class="n">st_underrun_005</span><span class="p">();</span>
+295 	<span class="p">}</span>
+296 
+297 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">6</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+298 	<span class="p">{</span>
+299 		<span class="n">st_underrun_006</span><span class="p">();</span>
+300 	<span class="p">}</span>
+301 
+302 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span> <span class="mi">7</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+303 	<span class="p">{</span>
+304 		<span class="n">st_underrun_007</span><span class="p">();</span>
+305 	<span class="p">}</span>
+306 <span class="p">}</span>
+307 
+</pre></div>
+</body>
+</html>

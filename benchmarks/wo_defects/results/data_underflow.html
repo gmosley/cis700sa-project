@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #f8f8f8; }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #888888 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
+.result { color: #F03434 }
+</style>
+</head>
+<body>
+<div class="highlight"><pre>
+  1 <span class="cm">/********Software Analysis - FY2013*************/</span>
+  2 <span class="cm">/*</span>
+  3 <span class="cm">* File Name: data_underflow.c</span>
+  4 <span class="cm">* Defect Classification</span>
+  5 <span class="cm">* ---------------------</span>
+  6 <span class="cm">* Defect Type: Numerical defects</span>
+  7 <span class="cm">* Defect Sub-type: Data underflow</span>
+  8 <span class="cm">* Description: Defect Free Code to identify false positives in data underflow in static declaration</span>
+  9 <span class="cm">*/</span>
+ 10 <span class="cp">#include</span> <span class="cpf">&quot;HeaderFile.h&quot;</span><span class="cp"></span>
+ 11 <span class="cm">/*</span>
+ 12 <span class="cm"> * Types of defects: underflow</span>
+ 13 <span class="cm"> * Complexity: int	Underflow is with -2	Constant</span>
+ 14 <span class="cm"> */</span>
+ 15 <span class="kt">void</span> <span class="nf">data_underflow_001</span> <span class="p">()</span>
+ 16 <span class="p">{</span>
+ 17 	<span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2147483646</span><span class="p">;</span>	<span class="cm">/* 0x80000001 */</span>
+ 18 	<span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+ 19 	<span class="n">ret</span> <span class="o">=</span> <span class="n">min</span> <span class="o">-</span> <span class="mi">2</span><span class="p">;</span> <span class="cm">/*Tool should Not detect this line as error*/</span> <span class="cm">/*No ERROR:Data Underflow*/</span>
+ 20         <span class="n">sink</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
+ 21 <span class="p">}</span>
+ 22 
+ 23 <span class="cm">/*</span>
+ 24 <span class="cm"> * Types of defects: underflow</span>
+ 25 <span class="cm"> * Complexity: unsigned int	Underflow with -1	Constant</span>
+ 26 <span class="cm"> */</span>
+ 27 <span class="kt">void</span> <span class="nf">data_underflow_002</span> <span class="p">()</span>
+ 28 <span class="p">{</span>
+ 29 	<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+ 30 	<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+ 31 	<span class="n">ret</span> <span class="o">=</span> <span class="n">min</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="cm">/*Tool should Not detect this line as error*/</span> <span class="cm">/*No ERROR:Data Underflow*/</span>
+ 32         <span class="n">sink</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
+ 33 <span class="p">}</span>
+ 34 
+ 35 <span class="cm">/*</span>
+ 36 <span class="cm"> * Types of defects: underflow</span>
+ 37 <span class="cm"> * Complexity: int	Underflow with decrement operator --</span>
+ 38 <span class="cm"> */</span>
+ 39 <span class="kt">void</span> <span class="nf">data_underflow_003</span> <span class="p">()</span>
+ 40 <span class="p">{</span>
+ 41 	<span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2147483646</span><span class="p">;</span>	<span class="cm">/* 0x80000002 */</span>
+ 42 	<span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+ 43 	<span class="n">min</span> <span class="o">--</span><span class="p">;</span>
+ 44 	<span class="n">min</span> <span class="o">--</span><span class="p">;</span>
+ 45 	<span class="n">ret</span> <span class="o">=</span> <span class="n">min</span><span class="p">;</span> <span class="cm">/*Tool should Not detect this line as error*/</span> <span class="cm">/*No ERROR:Data Underflow*/</span>
+ 46         <span class="n">sink</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
+ 47 <span class="p">}</span>
+ 48 
+ 49 <span class="cm">/*</span>
+ 50 <span class="cm"> * Types of defects: underflow</span>
+ 51 <span class="cm"> * Complexity: int	-128 At the underflow	Constant</span>
+ 52 <span class="cm"> */</span>
+ 53 <span class="kt">void</span> <span class="nf">data_underflow_004</span> <span class="p">()</span>
+ 54 <span class="p">{</span>
+ 55 	<span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2147483520</span><span class="p">;</span>
+ 56 	<span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+ 57 	<span class="n">ret</span> <span class="o">=</span> <span class="n">min</span> <span class="o">-</span> <span class="mi">128</span><span class="p">;</span> <span class="cm">/*Tool should Not detect this line as error*/</span> <span class="cm">/*No ERROR:Data Underflow*/</span>
+ 58         <span class="n">sink</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
+ 59 <span class="p">}</span>
+ 60 
+ 61 <span class="cm">/*</span>
+ 62 <span class="cm"> * Types of defects: underflow</span>
+ 63 <span class="cm"> * Complexity: int	Multiply by underflow	Constant</span>
+ 64 <span class="cm"> */</span>
+ 65 <span class="kt">void</span> <span class="nf">data_underflow_005</span> <span class="p">()</span>
+ 66 <span class="p">{</span>
+ 67 	<span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1073741824</span><span class="p">;</span>	<span class="cm">/* 0xc0000000 */</span>
+ 68 	<span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+ 69 	<span class="n">ret</span> <span class="o">=</span> <span class="n">min</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span> <span class="cm">/*Tool should Not detect this line as error*/</span> <span class="cm">/*No ERROR:Data Underflow*/</span>
+ 70         <span class="n">sink</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
+ 71 <span class="p">}</span>
+ 72 
+ 73 <span class="cm">/*</span>
+ 74 <span class="cm"> * Types of defects: underflow</span>
+ 75 <span class="cm"> * Complexity: the operands is a constant</span>
+ 76 <span class="cm"> */</span>
+ 77 <span class="kt">void</span> <span class="nf">data_underflow_006</span> <span class="p">()</span>
+ 78 <span class="p">{</span>
+ 79 	<span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+ 80 	<span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">2147483646</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">;</span> <span class="cm">/*Tool should Not detect this line as error*/</span> <span class="cm">/*No ERROR:Data Underflow*/</span>
+ 81         <span class="n">sink</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
+ 82 <span class="p">}</span>
+ 83 
+ 84 <span class="cm">/*</span>
+ 85 <span class="cm"> * Types of defects: underflow</span>
+ 86 <span class="cm"> * Complexity: floating point underflow ( float )</span>
+ 87 <span class="cm"> */</span>
+ 88 <span class="kt">void</span> <span class="nf">data_underflow_007</span> <span class="p">()</span>
+ 89 <span class="p">{</span>
+ 90 	<span class="kt">float</span> <span class="n">ret</span><span class="p">;</span>
+ 91 
+ 92 	<span class="cm">/* 0 00000000 00000000000000000000010 */</span>
+ 93 	<span class="kt">float</span> <span class="n">min</span> <span class="o">=</span> <span class="mf">2.80259693e-45</span><span class="n">F</span><span class="p">;</span>
+ 94 
+ 95 	<span class="n">ret</span> <span class="o">=</span> <span class="n">min</span> <span class="o">/</span> <span class="mf">2.0F</span><span class="p">;</span> <span class="cm">/*Tool should Not detect this line as error*/</span> <span class="cm">/*No ERROR:Data Underflow*/</span>
+ 96         <span class="n">sink</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
+ 97 <span class="p">}</span>
+ 98 
+ 99 <span class="cm">/*</span>
+100 <span class="cm"> * Types of defects: underflow</span>
+101 <span class="cm"> * Complexity: floating point underflow (double)</span>
+102 <span class="cm"> */</span>
+103 <span class="kt">void</span> <span class="nf">data_underflow_008</span> <span class="p">()</span>
+104 <span class="p">{</span>
+105 	<span class="kt">double</span> <span class="n">ret</span><span class="p">;</span>
+106 
+107 	<span class="cm">/* 0 00000000000 0000000000000000000000000000000000000000000000000010 */</span>
+108 	<span class="kt">double</span> <span class="n">min</span> <span class="o">=</span> <span class="mf">9.8813129168249309e-324</span><span class="p">;</span>
+109 
+110 	<span class="n">ret</span> <span class="o">=</span> <span class="n">min</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">;</span> <span class="cm">/*Tool should Not detect this line as error*/</span> <span class="cm">/*No ERROR:Data Underflow*/</span>
+111         <span class="n">sink</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
+112 <span class="p">}</span>
+113 
+114 <span class="cm">/*</span>
+115 <span class="cm"> * Types of defects: underflow</span>
+116 <span class="cm"> * Complexity:  underflow (char)</span>
+117 <span class="cm"> */</span>
+118 <span class="kt">void</span> <span class="nf">data_underflow_009</span> <span class="p">()</span>
+119 <span class="p">{</span>
+120 	<span class="kt">char</span> <span class="n">min</span> <span class="o">=</span> <span class="o">-</span><span class="mi">126</span><span class="p">;</span>	<span class="cm">/* 0x80000002 */</span>
+121 	<span class="kt">char</span> <span class="n">ret</span><span class="p">;</span>
+122 	<span class="n">ret</span> <span class="o">=</span> <span class="n">min</span> <span class="o">-</span> <span class="mi">2</span><span class="p">;</span> <span class="cm">/*Tool should Not detect this line as error*/</span> <span class="cm">/*No ERROR:Data Underflow*/</span>
+123         <span class="n">sink</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
+124 <span class="p">}</span>
+125 
+126 <span class="cm">/*</span>
+127 <span class="cm"> * Types of defects: underflow</span>
+128 <span class="cm"> * Complexity: int	Underflow at The return value of the function</span>
+129 <span class="cm"> */</span>
+130 <span class="kt">int</span> <span class="nf">data_underflow_010_func_001</span> <span class="p">()</span>
+131 <span class="p">{</span>
+132 	<span class="k">return</span> <span class="mi">2</span><span class="p">;</span>
+133 <span class="p">}</span>
+134 
+135 <span class="kt">void</span> <span class="nf">data_underflow_010</span> <span class="p">()</span>
+136 <span class="p">{</span>
+137 	<span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2147483646</span><span class="p">;</span>
+138 	<span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+139 	<span class="n">ret</span> <span class="o">=</span> <span class="n">min</span> <span class="o">-</span> <span class="n">data_underflow_010_func_001</span><span class="p">();</span> <span class="cm">/*Tool should Not detect this line as error*/</span> <span class="cm">/*No ERROR:Data Underflow*/</span>
+140         <span class="n">sink</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
+141 <span class="p">}</span>
+142 
+143 <span class="cm">/*</span>
+144 <span class="cm"> * Types of defects: underflow</span>
+145 <span class="cm"> * Complexity: int	Underflow at Function arguments</span>
+146 <span class="cm"> */</span>
+147 <span class="kt">void</span> <span class="nf">data_underflow_011_func_001</span> <span class="p">(</span><span class="kt">int</span> <span class="n">d</span><span class="p">)</span>
+148 <span class="p">{</span>
+149 	<span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2147483646</span><span class="p">;</span>
+150 	<span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+151 	<span class="n">ret</span> <span class="o">=</span> <span class="n">min</span> <span class="o">-</span> <span class="n">d</span><span class="p">;</span> <span class="cm">/*Tool should Not detect this line as error*/</span> <span class="cm">/*No ERROR:Data Underflow*/</span>
+152         <span class="n">sink</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
+153 <span class="p">}</span>
+154 
+155 <span class="kt">void</span> <span class="nf">data_underflow_011</span> <span class="p">()</span>
+156 <span class="p">{</span>
+157 	<span class="n">data_underflow_011_func_001</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+158 <span class="p">}</span>
+159 
+160 <span class="cm">/*</span>
+161 <span class="cm"> * Types of defects: Underflow</span>
+162 <span class="cm"> * Complexity: int	underflow at	An array of element values</span>
+163 <span class="cm"> */</span>
+164 <span class="kt">void</span> <span class="nf">data_underflow_012</span> <span class="p">()</span>
+165 <span class="p">{</span>
+166 	<span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2147483646</span><span class="p">;</span>
+167 	<span class="kt">int</span> <span class="n">dlist</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">};</span>
+168 	<span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+169 	<span class="n">ret</span> <span class="o">=</span> <span class="n">min</span> <span class="o">-</span> <span class="n">dlist</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span> <span class="cm">/*Tool should Not detect this line as error*/</span> <span class="cm">/*No ERROR:Data Underflow*/</span>
+170         <span class="n">sink</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
+171 <span class="p">}</span>
+172 
+173 <span class="cm">/*</span>
+174 <span class="cm"> * Types of defects: underflow</span>
+175 <span class="cm"> * Data underflow main function</span>
+176 <span class="cm"> */</span>
+177 <span class="k">extern</span> <span class="k">volatile</span> <span class="kt">int</span> <span class="n">vflag</span><span class="p">;</span>
+178 <span class="kt">void</span> <span class="nf">data_underflow_main</span> <span class="p">()</span>
+179 <span class="p">{</span>
+180 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span><span class="mi">1</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+181 	<span class="p">{</span>
+182 		<span class="n">data_underflow_001</span><span class="p">();</span>
+183 	<span class="p">}</span>
+184 
+185 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span><span class="mi">2</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+186 	<span class="p">{</span>
+187 		<span class="n">data_underflow_002</span><span class="p">();</span>
+188 	<span class="p">}</span>
+189 
+190 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span><span class="mi">3</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+191 	<span class="p">{</span>
+192 		<span class="n">data_underflow_003</span><span class="p">();</span>
+193 	<span class="p">}</span>
+194 
+195 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span><span class="mi">4</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+196 	<span class="p">{</span>
+197 		<span class="n">data_underflow_004</span><span class="p">();</span>
+198 	<span class="p">}</span>
+199 
+200 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span><span class="mi">5</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+201 	<span class="p">{</span>
+202 		<span class="n">data_underflow_005</span><span class="p">();</span>
+203 	<span class="p">}</span>
+204 
+205 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span><span class="mi">6</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+206 	<span class="p">{</span>
+207 		<span class="n">data_underflow_006</span><span class="p">();</span>
+208 	<span class="p">}</span>
+209 
+210 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span><span class="mi">7</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+211 	<span class="p">{</span>
+212 		<span class="n">data_underflow_007</span><span class="p">();</span>
+213 	<span class="p">}</span>
+214 
+215 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span><span class="mi">8</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+216 	<span class="p">{</span>
+217 		<span class="n">data_underflow_008</span><span class="p">();</span>
+218 	<span class="p">}</span>
+219 
+220 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span><span class="mi">9</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+221 	<span class="p">{</span>
+222 		<span class="n">data_underflow_009</span><span class="p">();</span>
+223 	<span class="p">}</span>
+224 
+225 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span><span class="mi">10</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+226 	<span class="p">{</span>
+227 		<span class="n">data_underflow_010</span><span class="p">();</span>
+228 	<span class="p">}</span>
+229 
+230 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span><span class="mi">11</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+231 	<span class="p">{</span>
+232 		<span class="n">data_underflow_011</span><span class="p">();</span>
+233 	<span class="p">}</span>
+234 
+235 	<span class="k">if</span> <span class="p">(</span><span class="n">vflag</span> <span class="o">==</span><span class="mi">12</span> <span class="o">||</span> <span class="n">vflag</span> <span class="o">==</span><span class="mi">888</span><span class="p">)</span>
+236 	<span class="p">{</span>
+237 		<span class="n">data_underflow_012</span><span class="p">();</span>
+238 	<span class="p">}</span>
+239 <span class="p">}</span>
+240 
+</pre></div>
+</body>
+</html>
